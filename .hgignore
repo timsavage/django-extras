@@ -1,0 +1,4 @@
+glob:*.pyc
+glob:*~
+glob:dev.db
+glob:venv/
