@@ -2,3 +2,9 @@ glob:*.pyc
 glob:*~
 glob:dev.db
 glob:venv/
+
+# Ignore artefacts produced by setuptools
+syntax: glob
+build
+dist
+*.egg-info/
