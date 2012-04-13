@@ -1,4 +1,5 @@
 from django.core.serializers import json
+from django.utils import simplejson
 from django.http import HttpResponse
 
 
