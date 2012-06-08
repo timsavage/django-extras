@@ -1,0 +1,130 @@
+from django.contrib.auth.models import *
+
+
+class OwnerMixinManager(models.Manager):
+    """
+    Manager for multiple owner mixin
+    """
+    def __init__(self, owner_filter):
+        super(OwnerMixinManager, self).__init__()
+        self.__owner_filter = owner_filter
+
+    def owned_by(self, user):
+        """
+        Filter by a user.
+
+        :user: the user object to check; this can be a ``django.contrib.auth.models.User``
+            instance or a primary key.
+        """
+        user_pk = user.pk if isinstance(user, User) else user
+        return self.filter(**{self.__owner_filter:user_pk})
+
+
+class OwnerMixinBase(models.Model):
+    class Meta:
+        abstract = True
+
+    def _get_owner_pks(self):
+        """
+        Get all primary keys from owners.
+
+        This is far more efficient that loading a full user object,
+         if we don't need to avoid loading full objects.
+
+        :return: list of primary keys.
+        """
+        raise NotImplemented
+
+    def user_has_access(self, user, allow_staff=False, allow_superuser=False):
+        """
+        Does a particular user have access to this model instance.
+
+        :user: the user object to check; this can be a ``django.contrib.auth.models.User`` instance
+            or a primary key. Recommendation is to pass request.user
+        :allow_staff: any user who has the ``is_staff`` flag is granted access.
+        :allow_superuser: any user who has the ``is_superuser`` flag is granted access.
+        :return: True if user has access; else False.
+        """
+        # Only touch elements that could cause a database operation if actually needed.
+        user_pk, user = (user.pk, user) if isinstance(user, User) else (user, None)
+        if allow_staff or allow_superuser:
+            if not user:
+                user = User.objects.only('is_staff', 'is_superuser').get(pk=user_pk)
+            if user.is_staff or user.is_superuser:
+                return True
+        return user_pk in self._get_owner_pks()
+
+
+class SingleOwnerMixin(OwnerMixinBase):
+    """
+    Model mixin that provides a model instance with a single owner.
+
+    *Usage*
+    ::
+
+        class Document(SingleOwnerMixin, models.Model):
+            name = models.CharField(max_length=200)
+            content = models.TextField()
+
+    """
+    owner = models.ForeignKey(User, related_name='%(app_label)s_%(class)s_owner')
+
+    owned_by = OwnerMixinManager('owner')
+
+    class Meta:
+        abstract = True
+
+    def get_owners(self):
+        """
+        Get all owners of this model instance.
+
+        :return: list of ``User`` instances.
+        """
+        return [self.owner]
+
+    def _get_owner_pks(self):
+        return [self.owner.pk]
+
+
+class MultipleOwnerMixin(OwnerMixinBase):
+    """
+    Model mixin that provides a model instance with multiple owners.
+
+    *Usage*
+    ::
+
+        class Document(MultipleOwnerMixin, models.Model):
+            name = models.CharField(max_length=200)
+            content = models.TextField()
+
+    *With through class*
+    ::
+
+        class Document(MultipleOwnerMixin, models.Model):
+            name = models.CharField(max_length=200)
+            content = models.TextField()
+            owners = models.ManyToManyField(User, through='DocumentUser')
+
+        class DocumentUser(models.Model):
+            user = models.ForeignKey(User)
+            document = models.ForeignKey(Document)
+            can_edit = models.BooleanField()
+
+    """
+    owners = models.ManyToManyField(User, related_name='%(app_label)s_%(class)s_owners')
+
+    owned_by = OwnerMixinManager('owners')
+
+    class Meta:
+        abstract = True
+
+    def get_owners(self):
+        """
+        Get all owners of this model instance.
+
+        :return: list of ``User`` instances.
+        """
+        return list(self.owners.all())
+
+    def _get_owner_pks(self):
+        return self.owners.values_list('id', flat=True)
