@@ -9,26 +9,47 @@ class OwnerMixinManager(models.Manager):
         super(OwnerMixinManager, self).__init__()
         self.__owner_filter = owner_filter
 
-    def owned_by(self, user, *extra_users):
+    def _owned_by_multi(self, users):
+        user_pks = [u.pk if isinstance(u, User) else u for u in users]
+        filter = {self.__owner_filter + '__in': user_pks}
+        return self.filter(**filter).distinct()
+
+    def _owned_by_single(self, user, allow_staff, allow_superuser):
+        user_pk, user = (user.pk, user) if isinstance(user, User) else (user, None)
+        if allow_staff or allow_superuser:
+            if not user:
+                user = User.objects.only('is_staff', 'is_superuser').get(pk=user_pk)
+            if (allow_staff and user.is_staff) or (allow_superuser and user.is_superuser):
+                return self.all()
+        filter = {self.__owner_filter: user_pk}
+        return self.filter(**filter)
+
+    def owned_by(self, user, allow_staff=False, allow_superuser=False):
         """
         Filter by a user(s).
 
         This method accepts both ``django.contrib.auth.models.User`` instances
         or user Id's, both types of value can be mixed.
 
-        :users: user to filter by.
-        :extra_users: additional users to also filter by. Note this requires
-            use of distinct.
+        :user: user or sequence of users to also filter by. Note this requires
+            use of distinct if a tuple is specified.
+        :allow_staff: any user who has the ``is_staff`` flag does not get
+            filtered. Can only be used with a single user.
+        :allow_superuser: any user who has the ``is_superuser`` flag does not
+            get filtered. Can only be used with a single user.
         """
-        if extra_users:
-            users = list(extra_users) + [user]
-            user_pks = [u.pk if isinstance(u, User) else u for u in users]
-            filter = {self.__owner_filter + '__in': user_pks}
-            return self.filter(**filter).distinct()
+        if not user:
+            return []
+
+        if isinstance(user, (list, tuple)):
+            if len(user) == 1:
+                user = user[0]
+            else:
+                if allow_staff or allow_superuser:
+                    raise TypeError('Expected a User instance or int; not list or tuple.')
+                return self._owned_by_multi(user)
         else:
-            user_pk = user.pk if isinstance(user, User) else user
-            filter = {self.__owner_filter: user_pk}
-            return self.filter(**filter)
+            return self._owned_by_single(user, allow_staff, allow_superuser)
 
 
 class OwnerMixinBase(models.Model):
@@ -61,7 +82,7 @@ class OwnerMixinBase(models.Model):
         if allow_staff or allow_superuser:
             if not user:
                 user = User.objects.only('is_staff', 'is_superuser').get(pk=user_pk)
-            if user.is_staff or user.is_superuser:
+            if (allow_staff and user.is_staff) or (allow_superuser and user.is_superuser):
                 return True
         return user_pk in self._get_owner_pks()
 
