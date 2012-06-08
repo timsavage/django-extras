@@ -9,15 +9,26 @@ class OwnerMixinManager(models.Manager):
         super(OwnerMixinManager, self).__init__()
         self.__owner_filter = owner_filter
 
-    def owned_by(self, user):
+    def owned_by(self, user, *extra_users):
         """
-        Filter by a user.
+        Filter by a user(s).
 
-        :user: the user object to check; this can be a ``django.contrib.auth.models.User``
-            instance or a primary key.
+        This method accepts both ``django.contrib.auth.models.User`` instances
+        or user Id's, both types of value can be mixed.
+
+        :users: user to filter by.
+        :extra_users: additional users to also filter by. Note this requires
+            use of distinct.
         """
-        user_pk = user.pk if isinstance(user, User) else user
-        return self.filter(**{self.__owner_filter:user_pk})
+        if extra_users:
+            users = list(extra_users) + [user]
+            user_pks = [u.pk if isinstance(u, User) else u for u in users]
+            filter = {self.__owner_filter + '__in': user_pks}
+            return self.filter(**filter).distinct()
+        else:
+            user_pk = user.pk if isinstance(user, User) else user
+            filter = {self.__owner_filter: user_pk}
+            return self.filter(**filter)
 
 
 class OwnerMixinBase(models.Model):
@@ -69,7 +80,7 @@ class SingleOwnerMixin(OwnerMixinBase):
     """
     owner = models.ForeignKey(User, related_name='%(app_label)s_%(class)s_owner')
 
-    owned_by = OwnerMixinManager('owner')
+    objects = OwnerMixinManager('owner')
 
     class Meta:
         abstract = True
@@ -113,7 +124,7 @@ class MultipleOwnerMixin(OwnerMixinBase):
     """
     owners = models.ManyToManyField(User, related_name='%(app_label)s_%(class)s_owners')
 
-    owned_by = OwnerMixinManager('owners')
+    objects = OwnerMixinManager('owners')
 
     class Meta:
         abstract = True
