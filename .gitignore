@@ -1,6 +1,7 @@
 *~
 *.py[co]
 *.egg-info
+build*
 
 # IDE cruft
 .idea/*
