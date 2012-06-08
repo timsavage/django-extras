@@ -1,19 +1,35 @@
+from collections import OrderedDict
+from django.db.models.fields import NOT_PROVIDED
 
 
 class ChoiceEnum(object):
     """
     Defines a choice set for use with Django Models.
 
-    Items are defined with:
+    ChoiceEnum can be used in one of two ways, due to a side effect of how dictionaries are sorted in Python
+    (dictionaries and by extension **kwargs are implemented as a hash map) the order is not preserved.
+
+    The nicest way to use ChoiceEnum (without guaranteed ordering):
 
         MY_CHOICES = ChoiceEnum(
             OPTION_ONE = ('value', 'Verbose value'),
-            OPTION_TWO = ('value2', 'Verbose value 2'),
+            OPTION_TWO = ('value2', 'Verbose value 2', True), # Default, the value can be anything ;)
         )
 
-    They can then be used for choices with:
+    The less nice way to use ChoiceEnum (with guaranteed ordering):
 
-        MY_CHOICES.get_choices()
+        MY_CHOICES = ChoiceEnum(
+            ('OPTION_ONE', ('value', 'Verbose value')),
+            ('OPTION_TWO', ('value2', 'Verbose value 2', True)), # Default, the value can be anything ;)
+        )
+
+    They can then be used for field choices:
+
+        foo = models.CharField(max_length=MY_CHOICES.max_length, choices=MY_CHOICES, default=MY_CHOICES.default)
+
+    or with the kwargs helper:
+
+        foo = models.CharField(**MY_CHOICES.kwargs)
 
     And values referenced using:
 
@@ -23,22 +39,48 @@ class ChoiceEnum(object):
 
         MY_CHOICES.OPTION_ONE__display
 
-    """
-    def __init__(self, **entries):
-        self._value_map = dict([(key, value) for (key, value) in entries.values()])
-        self._choices = entries
+    Convert a value to a display string:
 
-    def get_choices(self):
+        MY_CHOICES % 'value'
+
+    """
+    __slots__ = ('__default', '__value_map', '__choices', '__max_length')
+
+    def __init__(self, *args, **entries):
+        if args:
+            entries = OrderedDict(args)
+        if not entries:
+            raise ValueError('No entries have been provided.')
+
+        self.__default = NOT_PROVIDED
+        self.__max_length = 0
+        self.__value_map = dict()
+        self.__choices = OrderedDict()
+
+        map(self.__parse_entry, entries.iteritems())
+
+    def __parse_entry(self, entry):
+        key, value = entry
+
+        if not isinstance(value, (tuple, list)):
+            raise TypeError('Choice options should be a tuple or list.')
+        value_len = len(value)
+        if not value_len in (2, 3):
+            raise ValueError('Expected choice entry in the form (Value, Verbose Value, [default]).')
+
+        if value_len == 3:
+            self.__default = value[0]
+        if isinstance(value[0], basestring):
+            self.__max_length = max(self.__max_length, len(value[0]))
+
+        self.__value_map[value[0]] = value[1]
+        self.__choices[key] = value[0], value[1]
+
+    def __iter__(self):
         """
         Return choice list for use in model definition.
         """
-        return self._choices.values()
-
-    def resolve_display(self, value):
-        """
-        Resolve a value to it's display version.
-        """
-        return self._value_map[value]
+        return iter(self.__choices.values())
 
     def __contains__(self, value):
         """
@@ -46,15 +88,52 @@ class ChoiceEnum(object):
 
         @param value Choice value.
         """
-        return value in self._value_map.keys()
+        return value in self.__value_map
 
     def __getattr__(self, item):
         """
         Get the value of an Enum.
-
-        Append __display to get display version of the item.
         """
         if item.endswith('__display'):
-            return self._choices[item[:-9]][1]
+            return self.__choices[item[:-9]][1]
         else:
-            return self._choices[item][0]
+            return self.__choices[item][0]
+
+    def __mod__(self, other):
+        """
+        Resolve a value to it's display version.
+        """
+        return self.__value_map[other]
+
+    @property
+    def max_length(self):
+        """
+        Length of maximum value
+        """
+        return self.__max_length
+
+    @property
+    def default(self):
+        """
+        The default value.
+        """
+        return self.__default
+
+    @property
+    def kwargs(self):
+        """
+        Helper to simplify assignment of choices to a model field.
+        """
+        kwargs = {
+            'choices': self,
+            'default': self.__default,
+        }
+        if self.__max_length:
+            kwargs['max_length'] = self.__max_length
+        return kwargs
+
+    def resolve_value(self, value):
+        """
+        Resolve a value to it's display version.
+        """
+        return self._value_map[value]

@@ -1,36 +1,68 @@
-#!/usr/bin/env python
-from setuptools import setup, find_packages
-from os.path import join, dirname
-import django_extras
+from distutils.core import setup
+from distutils.command.install_data import install_data
+from distutils.command.install import INSTALL_SCHEMES
+from distutils.sysconfig import get_python_lib
+import os
+import sys
 
-if 'final' in django_extras.VERSION[-1]:
-    CLASSIFIERS = ['Development Status :: 5 - Stable']
-elif 'beta' in django_extras.VERSION[-1]:
-    CLASSIFIERS = ['Development Status :: 4 - Beta']
-else:
-    CLASSIFIERS = ['Development Status :: 3 - Alpha']
-CLASSIFIERS += [
-    'Environment :: Web Environment',
-    'Framework :: Django',
-    'Intended Audience :: Developers',
-    'Operating System :: OS Independent',
-    'Programming Language :: Python',
-    'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
-    'Topic :: Software Development',
-    'Topic :: Software Development :: Libraries :: Application Frameworks',
-]
+def fullsplit(path, result=None):
+    """
+    Split a pathname into components (the opposite of os.path.join) in a
+    platform-neutral way.
+    """
+    if result is None:
+        result = []
+    head, tail = os.path.split(path)
+    if head == '':
+        return [tail] + result
+    if head == path:
+        return result
+    return fullsplit(head, [tail] + result)
+    
+# Compile the list of packages available, because distutils doesn't have
+# an easy way to do this.
+packages, data_files = [], []
+root_dir = os.path.dirname(__file__)
+if root_dir != '':
+    os.chdir(root_dir)
+django_extras_dir = 'django_extras'
+
+for dirpath, dirnames, filenames in os.walk(django_extras_dir):
+    # Ignore dirnames that start with '.'
+    for i, dirname in enumerate(dirnames):
+        if dirname.startswith('.'): del dirnames[i]
+    if '__init__.py' in filenames:
+        packages.append('.'.join(fullsplit(dirpath)))
+    elif filenames:
+        data_files.append([dirpath, [os.path.join(dirpath, f) for f in filenames]])
+
+# Dynamically calculate the version based on django_extras.VERSION.
+version = __import__('django_extras').get_version()
 
 setup(
-    name = "django-extras",
-    version = django_extras.__version__,
+    name = "Django-Extras",
+    version = version,
     url = "https://bitbucket.org/timsavage/django-extras",
     author = "Tim Savage",
     author_email = "tim.savage@poweredbypenguins.org",
-    license = "BSD License",
-    description = "A selection of extra features for django that solve common annoyances and limitations.",
-    long_description=open(join(dirname(__file__), 'README')).read(),
-    classifiers=CLASSIFIERS,
-    platforms=['OS Independent'],
-    packages=find_packages(exclude=["example", "example.*"]),
-    zip_safe = False,
+    description = "A selection of extras for the Django Web framework.",
+    packages = packages,
+    data_files = data_files,
+    requires = ['django'],
+    classifiers = [
+        'Development Status :: 4 - Beta',
+        'Environment :: Web Environment',
+        'Framework :: Django',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: BSD License',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
+        'Topic :: Internet :: WWW/HTTP',
+        'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+        'Topic :: Internet :: WWW/HTTP :: WSGI',
+        'Topic :: Software Development :: Libraries :: Application Frameworks',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+    ]
 )

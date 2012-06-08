@@ -1,5 +1,7 @@
-# Copyright 2011 Tim Savage <tim.savage@poweredbypenguins.org>
-# Licensed under the terms of the BSD License (see LICENSE)
-
 VERSION = (0, 1, 2, 'beta')
-__version__ = '.'.join(map(str, VERSION))
+
+def get_version(*args, **kwargs):
+    # Don't litter django_extras/__init__.py with all the get_version stuff.
+    # Only import if it's actually called.
+    from django.utils.version import get_version
+    return get_version(*args, **kwargs)

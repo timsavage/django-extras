@@ -1,16 +1,21 @@
+import os.path
+
 from django.core.serializers import json
 from django.utils import simplejson
-from django.http import HttpResponse
+from django.http import *
 
 
 class HttpResponseUnAuthorised(HttpResponse):
     status_code = 401
 
+
 class HttpResponseConflict(HttpResponse):
     status_code = 409
 
+
 class HttpResponseNotImplemented(HttpResponse):
     status_code = 501
+
 
 class HttpResponseGatewayTimeout(HttpResponse):
     status_code = 504
@@ -40,4 +45,3 @@ class JsonResponse(HttpResponse):
         super(JsonResponse, self).__init__(
             simplejson.dumps(data, cls=json.DjangoJSONEncoder),
             content_type=content_type, **kwargs)
-            
