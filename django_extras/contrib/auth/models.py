@@ -1,4 +1,5 @@
 from django.contrib.auth.models import *
+from django.db import models
 
 
 class OwnerMixinManager(models.Manager):
@@ -82,7 +83,7 @@ class OwnerMixinBase(models.Model):
         if allow_staff or allow_superuser:
             if not user:
                 user = User.objects.only('is_staff', 'is_superuser').get(pk=user_pk)
-            if (allow_staff and user.is_staff) or (allow_superuser and user.is_superuser):
+            if user.is_staff or user.is_superuser:
                 return True
         return user_pk in self._get_owner_pks()
 
@@ -106,7 +107,7 @@ class SingleOwnerMixin(OwnerMixinBase):
     class Meta:
         abstract = True
 
-    def get_owners(self):
+    def owners_list(self):
         """
         Get all owners of this model instance.
 
@@ -150,7 +151,7 @@ class MultipleOwnerMixin(OwnerMixinBase):
     class Meta:
         abstract = True
 
-    def get_owners(self):
+    def owners_list(self):
         """
         Get all owners of this model instance.
 
