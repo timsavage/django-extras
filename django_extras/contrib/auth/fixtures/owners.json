@@ -1,0 +1,38 @@
+[
+    {
+        "model":"auth.user",
+        "pk":1,
+        "fields":{
+            "username": "standard 1",
+            "first_name":"Standard",
+            "last_name":"User 1"
+        }
+    },
+    {
+        "model":"auth.user",
+        "pk":2,
+        "fields":{
+            "username": "standard 2",
+            "first_name":"Standard",
+            "last_name":"User 2"
+        }
+    },
+    {
+        "model":"auth.user",
+        "pk":3,
+        "fields":{
+            "username": "staff",
+            "first_name":"Staff",
+            "last_name":"User"
+        }
+    },
+    {
+        "model":"auth.user",
+        "pk":4,
+        "fields":{
+            "username": "admin",
+            "first_name":"Admin",
+            "last_name":"User"
+        }
+    }
+]
