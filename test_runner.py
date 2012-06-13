@@ -39,13 +39,12 @@ def main():
             os.path.join(os.path.dirname(__file__), 'templates'),
         ),
         'INSTALLED_APPS': (
-            #"django.contrib.auth",
+            "django.contrib.auth",
             "django.contrib.contenttypes",
             "django.contrib.sessions",
             "django.contrib.sites",
 
             "django_extras",
-            "django_extras.contrib.auth",
         ),
     })
     call_command('test', 'django_extras', 'auth')

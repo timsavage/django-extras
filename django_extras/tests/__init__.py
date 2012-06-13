@@ -1,1 +1,1 @@
-__author__ = 'tsavage'
+from contrib.auth import *

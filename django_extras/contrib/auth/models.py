@@ -83,7 +83,7 @@ class OwnerMixinBase(models.Model):
         if allow_staff or allow_superuser:
             if not user:
                 user = User.objects.only('is_staff', 'is_superuser').get(pk=user_pk)
-            if user.is_staff or user.is_superuser:
+            if (allow_staff and user.is_staff) or (allow_superuser and user.is_superuser):
                 return True
         return user_pk in self._get_owner_pks()
 
@@ -116,7 +116,7 @@ class SingleOwnerMixin(OwnerMixinBase):
         return [self.owner]
 
     def _get_owner_pks(self):
-        return [self.owner.pk]
+        return [self.owner_id]
 
 
 class MultipleOwnerMixin(OwnerMixinBase):

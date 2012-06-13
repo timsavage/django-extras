@@ -23,7 +23,9 @@
         "fields":{
             "username": "staff",
             "first_name":"Staff",
-            "last_name":"User"
+            "last_name":"User",
+            "is_staff": true,
+            "is_superuser": false
         }
     },
     {
@@ -32,7 +34,8 @@
         "fields":{
             "username": "admin",
             "first_name":"Admin",
-            "last_name":"User"
+            "last_name":"User",
+            "is_superuser": true
         }
     }
 ]
