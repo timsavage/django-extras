@@ -1,0 +1,76 @@
+==============================
+User authentication extensions
+==============================
+
+.. module:: django_extras.contrib.auth
+   :synopsis: Extensions to django.contrib.auth
+
+While Django comes with a built in user authentication system it leaves a
+couple of common use-cases incomplete. Django Extras fills in the missing
+pieces.
+
+
+Installation
+============
+
+No installation is required, this extension does not require additional
+database models.
+
+Convenience decorators
+======================
+
+.. currentmodule:: django_extras.contib.auth.decorators
+
+The staff_required decorator
+----------------------------
+
+.. function:: staff_required([include_superusers=True, login_url=None, raise_exception=False])
+
+    This decorator provides a simple way to restrict access to a particular
+    view to only users who have the *is_staff* set. Rather than using the
+    `~django.contrib.auth.decorators.user_passes_test()` decorator
+    restricting a view to staff only can be written as::
+
+        from django_extras.contrib.auth.decorators import staff_required
+        @staff_required
+        def my_view(request):
+            ...
+
+    By default this decorator also includes users with the *is_superuser* flag
+    set, these users can be excluded with the optional ``include_superuser``
+    parameter. Example::
+
+        from django_extras.contrib.auth.decorators import staff_required
+        @staff_required(include_superusers=False)
+        def my_view(request):
+            ...
+
+    As in the :func:`~decorators.login_required`, ``login_url`` defaults to
+    :setting:`settings.LOGIN_URL <LOGIN_URL>`.
+
+    Following from the change in Django 1.4 this decorator also includes the
+    ``raise_exception`` parameter, If given, the decorator will raise
+    :exe:`~django.core.exceptions.PermissionDenied`.
+
+The superuser_required decorator
+--------------------------------
+
+.. function:: superuser_required([login_url=None, raise_exception=False])
+
+    This decorator provides a simple way to restrict access to a particular
+    view to only users who have the *is_superuser* set. Rather than using
+    the `~django.contrib.auth.decorators.user_passes_test()` decorator
+    restricting a view to staff only can be written as::
+
+        from django_extras.contrib.auth.decorators import staff_required
+        @staff_required
+        def my_view(request):
+            ...
+
+    As in the :func:`~decorators.login_required`, ``login_url`` defaults to
+    :setting:`settings.LOGIN_URL <LOGIN_URL>`.
+
+    Following from the change in Django 1.4 this decorator also includes the
+    ``raise_exception`` parameter, If given, the decorator will raise
+    :exe:`~django.core.exceptions.PermissionDenied`.
+

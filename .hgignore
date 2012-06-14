@@ -3,6 +3,7 @@ syntax: glob
 *.py[co]
 *.egg-info
 build*
+docs/*.html
 
 # IDE cruft
 .idea/*
