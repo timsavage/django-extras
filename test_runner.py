@@ -47,7 +47,7 @@ def main():
             "django_extras",
         ),
     })
-    call_command('test', 'django_extras', 'auth')
+    call_command('test', 'django_extras')
 
 
 if __name__ == '__main__':

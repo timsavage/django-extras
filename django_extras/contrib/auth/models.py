@@ -15,17 +15,17 @@ class OwnerMixinManager(models.Manager):
         filter = {self.__owner_filter + '__in': user_pks}
         return self.filter(**filter).distinct()
 
-    def _owned_by_single(self, user, allow_staff, allow_superuser):
+    def _owned_by_single(self, user, include_staff, include_superuser):
         user_pk, user = (user.pk, user) if isinstance(user, User) else (user, None)
-        if allow_staff or allow_superuser:
+        if include_staff or include_superuser:
             if not user:
                 user = User.objects.only('is_staff', 'is_superuser').get(pk=user_pk)
-            if (allow_staff and user.is_staff) or (allow_superuser and user.is_superuser):
+            if (include_staff and user.is_staff) or (include_superuser and user.is_superuser):
                 return self.all()
         filter = {self.__owner_filter: user_pk}
         return self.filter(**filter)
 
-    def owned_by(self, user, allow_staff=False, allow_superuser=False):
+    def owned_by(self, user, include_staff=False, include_superuser=False):
         """
         Filter by a user(s).
 
@@ -34,9 +34,9 @@ class OwnerMixinManager(models.Manager):
 
         :user: user or sequence of users to also filter by. Note this requires
             use of distinct if a tuple is specified.
-        :allow_staff: any user who has the ``is_staff`` flag does not get
+        :include_staff: any user who has the ``is_staff`` flag does not get
             filtered. Can only be used with a single user.
-        :allow_superuser: any user who has the ``is_superuser`` flag does not
+        :include_superuser: any user who has the ``is_superuser`` flag does not
             get filtered. Can only be used with a single user.
         """
         if not user:
@@ -44,13 +44,14 @@ class OwnerMixinManager(models.Manager):
 
         if isinstance(user, (list, tuple)):
             if len(user) == 1:
+                # Flatten to just being a single user.
                 user = user[0]
             else:
-                if allow_staff or allow_superuser:
+                if include_staff or include_superuser:
                     raise TypeError('Expected a User instance or int; not list or tuple.')
                 return self._owned_by_multi(user)
-        else:
-            return self._owned_by_single(user, allow_staff, allow_superuser)
+
+        return self._owned_by_single(user, include_staff, include_superuser)
 
 
 class OwnerMixinBase(models.Model):
@@ -68,22 +69,22 @@ class OwnerMixinBase(models.Model):
         """
         raise NotImplemented
 
-    def user_has_access(self, user, allow_staff=False, allow_superuser=False):
+    def is_owned_by(self, user, include_staff=False, include_superuser=False):
         """
-        Does a particular user have access to this model instance.
+        Is this particular model owned by a particular user.
 
         :user: the user object to check; this can be a ``django.contrib.auth.models.User`` instance
             or a primary key. Recommendation is to pass request.user
-        :allow_staff: any user who has the ``is_staff`` flag is granted access.
-        :allow_superuser: any user who has the ``is_superuser`` flag is granted access.
+        :include_staff: any user who has the ``is_staff`` flag is included as an owner.
+        :include_superuser: any user who has the ``is_superuser`` flag is included as an owner.
         :return: True if user has access; else False.
         """
         # Only touch elements that could cause a database operation if actually needed.
         user_pk, user = (user.pk, user) if isinstance(user, User) else (user, None)
-        if allow_staff or allow_superuser:
+        if include_staff or include_superuser:
             if not user:
                 user = User.objects.only('is_staff', 'is_superuser').get(pk=user_pk)
-            if (allow_staff and user.is_staff) or (allow_superuser and user.is_superuser):
+            if (include_staff and user.is_staff) or (include_superuser and user.is_superuser):
                 return True
         return user_pk in self._get_owner_pks()
 
@@ -107,7 +108,7 @@ class SingleOwnerMixin(OwnerMixinBase):
     class Meta:
         abstract = True
 
-    def owners_list(self):
+    def owner_list(self):
         """
         Get all owners of this model instance.
 
@@ -151,7 +152,7 @@ class MultipleOwnerMixin(OwnerMixinBase):
     class Meta:
         abstract = True
 
-    def owners_list(self):
+    def owner_list(self):
         """
         Get all owners of this model instance.
 

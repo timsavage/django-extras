@@ -20,6 +20,119 @@ class MultiOwner(MultipleOwnerMixin, models.Model):
         app_label = 'auth'
 
 
+class OwnerMixinManagerTestCase(test.TransactionTestCase):
+    fixtures = ['owners.json']
+
+    def setUp(self):
+        self.user1 = User.objects.get(pk=1)
+        self.user2 = User.objects.get(pk=2)
+        self.user_staff = User.objects.get(pk=3)
+        self.user_super = User.objects.get(pk=4)
+
+        MultiOwner.objects.create(name="Test 1", description="123").owners.add(self.user1)
+        MultiOwner.objects.create(name="Test 2", description="123").owners.add(self.user1, self.user2)
+        MultiOwner.objects.create(name="Test 3", description="123").owners.add(self.user2)
+
+    def test_owned_by_none(self):
+        actual = MultiOwner.objects.owned_by(None)
+        self.assertSequenceEqual([], actual)
+
+    def test_owned_by_user(self):
+        actual = MultiOwner.objects.owned_by(self.user1).values_list('id', flat=True)
+        self.assertSequenceEqual([1, 2], actual)
+
+    def test_owned_by_user_id(self):
+        actual = MultiOwner.objects.owned_by(1).values_list('id', flat=True)
+        self.assertSequenceEqual([1, 2], actual)
+
+    def test_owned_by_single_user_list(self):
+        actual = MultiOwner.objects.owned_by([self.user1]).values_list('id', flat=True)
+        self.assertSequenceEqual([1, 2], actual)
+
+    def test_owned_by_multiple_users(self):
+        actual = MultiOwner.objects.owned_by([self.user1, self.user2]).values_list('id', flat=True)
+        self.assertSequenceEqual([1, 2, 3], actual)
+
+    def test_owned_by_multiple_user_ids(self):
+        actual = MultiOwner.objects.owned_by([1, 2]).values_list('id', flat=True)
+        self.assertSequenceEqual([1, 2, 3], actual)
+
+    def test_owned_by_include_staff(self):
+        actual = MultiOwner.objects.owned_by(self.user1, include_staff=True).values_list('id', flat=True)
+        self.assertSequenceEqual([1, 2], actual)
+
+        actual = MultiOwner.objects.owned_by(self.user_staff, include_staff=True).values_list('id', flat=True)
+        self.assertSequenceEqual([1, 2, 3], actual)
+
+        actual = MultiOwner.objects.owned_by(self.user_super, include_staff=True).values_list('id', flat=True)
+        self.assertSequenceEqual([], actual)
+
+    def test_owned_by_include_super(self):
+        actual = MultiOwner.objects.owned_by(self.user1, include_superuser=True).values_list('id', flat=True)
+        self.assertSequenceEqual([1, 2], actual)
+
+        actual = MultiOwner.objects.owned_by(self.user_staff, include_superuser=True).values_list('id', flat=True)
+        self.assertSequenceEqual([], actual)
+
+        actual = MultiOwner.objects.owned_by(self.user_super, include_superuser=True).values_list('id', flat=True)
+        self.assertSequenceEqual([1, 2, 3], actual)
+
+    def test_owned_by_include_either_multiple(self):
+        self.assertRaises(TypeError, lambda: MultiOwner.objects.owned_by([self.user_super, self.user1], include_staff=True))
+
+
+class OwnerMixinBaseTestCase(test.TransactionTestCase):
+    fixtures = ['owners.json']
+
+    def setUp(self):
+        self.user1 = User.objects.get(pk=1)
+        self.user2 = User.objects.get(pk=2)
+        self.user_staff = User.objects.get(pk=3)
+        self.user_super = User.objects.get(pk=4)
+
+        MultiOwner.objects.create(name="Test 1", description="123").owners.add(self.user1)
+        MultiOwner.objects.create(name="Test 2", description="123").owners.add(self.user1, self.user2)
+        MultiOwner.objects.create(name="Test 3", description="123").owners.add(self.user2)
+
+    def test_is_owned_by_user(self):
+        self.assertTrue(MultiOwner.objects.get(pk=1).is_owned_by(self.user1))
+        self.assertFalse(MultiOwner.objects.get(pk=1).is_owned_by(self.user2))
+
+        self.assertTrue(MultiOwner.objects.get(pk=2).is_owned_by(self.user1))
+        self.assertTrue(MultiOwner.objects.get(pk=2).is_owned_by(self.user2))
+
+        self.assertFalse(MultiOwner.objects.get(pk=3).is_owned_by(self.user1))
+        self.assertTrue(MultiOwner.objects.get(pk=3).is_owned_by(self.user2))
+
+    def test_is_owned_by_user_id(self):
+        self.assertTrue(MultiOwner.objects.get(pk=1).is_owned_by(1))
+        self.assertFalse(MultiOwner.objects.get(pk=1).is_owned_by(2))
+
+        self.assertTrue(MultiOwner.objects.get(pk=2).is_owned_by(1))
+        self.assertTrue(MultiOwner.objects.get(pk=2).is_owned_by(2))
+
+        self.assertFalse(MultiOwner.objects.get(pk=3).is_owned_by(1))
+        self.assertTrue(MultiOwner.objects.get(pk=3).is_owned_by(2))
+
+    def test_is_owned_by_include_staff(self):
+        self.assertTrue(MultiOwner.objects.get(pk=1).is_owned_by(self.user1, include_staff=True))
+        self.assertFalse(MultiOwner.objects.get(pk=1).is_owned_by(self.user2, include_staff=True))
+        self.assertTrue(MultiOwner.objects.get(pk=1).is_owned_by(self.user_staff, include_staff=True))
+        self.assertFalse(MultiOwner.objects.get(pk=1).is_owned_by(self.user_super, include_staff=True))
+
+    def test_is_owned_by_include_superuser(self):
+        self.assertTrue(MultiOwner.objects.get(pk=1).is_owned_by(self.user1, include_superuser=True))
+        self.assertFalse(MultiOwner.objects.get(pk=1).is_owned_by(self.user2, include_superuser=True))
+        self.assertFalse(MultiOwner.objects.get(pk=1).is_owned_by(self.user_staff, include_superuser=True))
+        self.assertTrue(MultiOwner.objects.get(pk=1).is_owned_by(self.user_super, include_superuser=True))
+
+    def test_is_owned_by_include_with_pk(self):
+        self.assertTrue(MultiOwner.objects.get(pk=1).is_owned_by(1, include_staff=True))
+        self.assertFalse(MultiOwner.objects.get(pk=1).is_owned_by(2, include_staff=True))
+        self.assertTrue(MultiOwner.objects.get(pk=1).is_owned_by(3, include_staff=True))
+        self.assertFalse(MultiOwner.objects.get(pk=1).is_owned_by(4, include_staff=True))
+
+
 class SingleOwnerTestCase(test.TransactionTestCase):
     fixtures = ['owners.json']
 
@@ -34,47 +147,19 @@ class SingleOwnerTestCase(test.TransactionTestCase):
         SingleOwner.objects.create(name="Test 3", description="123", owner_id=3) # Staff
         SingleOwner.objects.create(name="Test 4", description="123", owner_id=4) # Superuser
 
-    def test_user_has_access_standard(self):
-        s = SingleOwner.objects.get(pk=1)
-        self.assertTrue(s.user_has_access(self.user1))
-        self.assertFalse(s.user_has_access(self.user2))
-        self.assertFalse(s.user_has_access(self.user_staff))
-        self.assertFalse(s.user_has_access(self.user_super))
+    def test_get_owner_pks(self):
+        actual = SingleOwner.objects.get(pk=1)._get_owner_pks()
+        self.assertListEqual([1], actual)
 
-    def test_user_has_access_staff(self):
-        s = SingleOwner.objects.get(pk=1)
-        self.assertTrue(s.user_has_access(self.user1, allow_staff=True))
-        self.assertFalse(s.user_has_access(self.user2, allow_staff=True))
-        self.assertTrue(s.user_has_access(self.user_staff, allow_staff=True))
-        self.assertFalse(s.user_has_access(self.user_super, allow_staff=True))
+        actual = SingleOwner.objects.get(pk=2)._get_owner_pks()
+        self.assertListEqual([2], actual)
 
-    def test_user_has_access_superuser(self):
-        s = SingleOwner.objects.get(pk=1)
-        self.assertTrue(s.user_has_access(self.user1, allow_superuser=True))
-        self.assertFalse(s.user_has_access(self.user2, allow_superuser=True))
-        self.assertFalse(s.user_has_access(self.user_staff, allow_superuser=True))
-        self.assertTrue(s.user_has_access(self.user_super, allow_superuser=True))
+    def test_get_owners_list(self):
+        actual = SingleOwner.objects.get(pk=1).owner_list()
+        self.assertListEqual([self.user1], actual)
 
-    def test_user_has_access_both(self):
-        s = SingleOwner.objects.get(pk=1)
-        self.assertTrue(s.user_has_access(self.user1, allow_staff=True, allow_superuser=True))
-        self.assertFalse(s.user_has_access(self.user2, allow_staff=True, allow_superuser=True))
-        self.assertTrue(s.user_has_access(self.user_staff, allow_staff=True, allow_superuser=True))
-        self.assertTrue(s.user_has_access(self.user_super, allow_staff=True, allow_superuser=True))
-
-    def test_user_has_access_pk_normal(self):
-        s = SingleOwner.objects.get(pk=1)
-        self.assertTrue(s.user_has_access(1))
-        self.assertFalse(s.user_has_access(2))
-        self.assertFalse(s.user_has_access(3))
-        self.assertFalse(s.user_has_access(4))
-
-    def test_user_has_access_pk_both(self):
-        s = SingleOwner.objects.get(pk=1)
-        self.assertTrue(s.user_has_access(1, allow_staff=True, allow_superuser=True))
-        self.assertFalse(s.user_has_access(2, allow_staff=True, allow_superuser=True))
-        self.assertTrue(s.user_has_access(3, allow_staff=True, allow_superuser=True))
-        self.assertTrue(s.user_has_access(4, allow_staff=True, allow_superuser=True))
+        actual = SingleOwner.objects.get(pk=2).owner_list()
+        self.assertListEqual([self.user2], actual)
 
 
 class MultiOwnerTestTestCase(test.TransactionTestCase):
@@ -87,6 +172,20 @@ class MultiOwnerTestTestCase(test.TransactionTestCase):
         self.user_super = User.objects.get(pk=4)
 
         MultiOwner.objects.create(name="Test 1", description="123").owners.add(self.user1)
-        MultiOwner.objects.create(name="Test 2", description="123")
+        MultiOwner.objects.create(name="Test 2", description="123").owners.add(self.user1, self.user2)
         MultiOwner.objects.create(name="Test 3", description="123")
         MultiOwner.objects.create(name="Test 4", description="123")
+
+    def test_get_owner_pks(self):
+        actual = MultiOwner.objects.get(pk=1)._get_owner_pks()
+        self.assertSequenceEqual([1], actual)
+
+        actual = MultiOwner.objects.get(pk=2)._get_owner_pks()
+        self.assertSequenceEqual([1, 2], actual)
+
+    def test_get_owners_list(self):
+        actual = MultiOwner.objects.get(pk=1).owner_list()
+        self.assertListEqual([self.user1], actual)
+
+        actual = MultiOwner.objects.get(pk=2).owner_list()
+        self.assertListEqual([self.user1, self.user2], actual)
