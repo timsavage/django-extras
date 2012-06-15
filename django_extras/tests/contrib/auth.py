@@ -1,8 +1,108 @@
 from django import test
 from django.db import models
+from django.core.exceptions import PermissionDenied
+from django.http import HttpResponse, HttpRequest
 from django.contrib.auth.models import User
+from django_extras.contrib.auth.decorators import staff_required, superuser_required
 from django_extras.contrib.auth.models import SingleOwnerMixin, MultipleOwnerMixin
 
+
+@staff_required
+def staff_view(request, foo, bar='eek'):
+    return HttpResponse('ok')
+
+@staff_required(include_superusers=False)
+def staff_only_view(request, foo, bar='eek'):
+    return HttpResponse('ok')
+
+@staff_required(raise_exception=True)
+def staff_view_throw(request, foo, bar='eek'):
+    return HttpResponse('ok')
+
+
+class StaffRequiredTestCase(test.TestCase):
+    def __init__(self, *args, **kwargs):
+        super(StaffRequiredTestCase, self).__init__(*args, **kwargs)
+        self.user = User()
+        self.user_staff = User(is_staff=True)
+        self.user_super = User(is_superuser=True)
+
+    def create_request(self, user):
+        request = HttpRequest()
+        request.user = user
+        request.META['SERVER_NAME'] = 'test'
+        request.META['SERVER_PORT'] = 80
+        return request
+
+    def test_normal_user(self):
+        request = self.create_request(self.user)
+        response = staff_view(request, 123)
+        self.assertEqual(response.status_code, 302)
+
+    def test_staff_user(self):
+        request = self.create_request(self.user_staff)
+        response = staff_view(request, 123)
+        self.assertEqual(response.status_code, 200)
+
+    def test_super_user(self):
+        request = self.create_request(self.user_super)
+        response = staff_view(request, 123)
+        self.assertEqual(response.status_code, 200)
+
+    def test_staff_only(self):
+        request = self.create_request(self.user_super)
+        response = staff_only_view(request, 123)
+        self.assertEqual(response.status_code, 302)
+
+    def test_raise_exception(self):
+        request = self.create_request(self.user)
+        self.assertRaises(PermissionDenied, lambda: staff_view_throw(request, 123))
+
+
+@superuser_required
+def superuser_view(request, foo, bar='eek'):
+    return HttpResponse()
+
+@superuser_required(raise_exception=True)
+def superuser_view_throw(request, foo, bar='eek'):
+    return HttpResponse()
+
+
+class SuperuserRequiredTestCase(test.TestCase):
+    def __init__(self, *args, **kwargs):
+        super(SuperuserRequiredTestCase, self).__init__(*args, **kwargs)
+        self.user = User()
+        self.user_staff = User(is_staff=True)
+        self.user_super = User(is_superuser=True)
+
+    def create_request(self, user):
+        request = HttpRequest()
+        request.user = user
+        request.META['SERVER_NAME'] = 'test'
+        request.META['SERVER_PORT'] = 80
+        return request
+
+    def test_normal_user(self):
+        request = self.create_request(self.user)
+        response = superuser_view(request, 123)
+        self.assertEqual(response.status_code, 302)
+
+    def test_staff_user(self):
+        request = self.create_request(self.user_staff)
+        response = superuser_view(request, 123)
+        self.assertEqual(response.status_code, 302)
+
+    def test_super_user(self):
+        request = self.create_request(self.user_super)
+        response = superuser_view(request, 123)
+        self.assertEqual(response.status_code, 200)
+
+    def test_raise_exception(self):
+        request = self.create_request(self.user)
+        self.assertRaises(PermissionDenied, lambda: superuser_view_throw(request, 123))
+
+
+## Models required for the follow tests
 
 class SingleOwner(SingleOwnerMixin, models.Model):
     name = models.CharField(max_length=50)
@@ -79,6 +179,10 @@ class OwnerMixinManagerTestCase(test.TransactionTestCase):
 
     def test_owned_by_include_either_multiple(self):
         self.assertRaises(TypeError, lambda: MultiOwner.objects.owned_by([self.user_super, self.user1], include_staff=True))
+
+    def test_owned_by_include_either_user_id(self):
+        actual = MultiOwner.objects.owned_by(1, include_staff=True).values_list('id', flat=True)
+        self.assertSequenceEqual([1, 2], actual)
 
 
 class OwnerMixinBaseTestCase(test.TransactionTestCase):
