@@ -201,8 +201,8 @@ modindex_common_prefix = ["django."]
 # (source start file, target name, title, author, document class [howto/manual]).
 #latex_documents = []
 latex_documents = [
-  ('contents', 'django.tex', 'Django Documentation',
-   'Django Software Foundation', 'manual'),
+  ('contents', 'django.tex', 'Django Extras Documentation',
+   'Tim Savage', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -234,7 +234,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('contents', 'django', 'Django Documentation', ['Django Software Foundation'], 1)
+    ('contents', 'django', 'Django Extras Documentation', ['Tim Savage'], 1)
 ]
 
 
