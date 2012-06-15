@@ -50,7 +50,7 @@ The staff_required decorator
 
     Following from the change in Django 1.4 this decorator also includes the
     ``raise_exception`` parameter, If given, the decorator will raise
-    :exe:`~django.core.exceptions.PermissionDenied`.
+    :exc:`~django.core.exceptions.PermissionDenied`.
 
 The superuser_required decorator
 --------------------------------
@@ -72,5 +72,5 @@ The superuser_required decorator
 
     Following from the change in Django 1.4 this decorator also includes the
     ``raise_exception`` parameter, If given, the decorator will raise
-    :exe:`~django.core.exceptions.PermissionDenied`.
+    :exc:`~django.core.exceptions.PermissionDenied`.
 
