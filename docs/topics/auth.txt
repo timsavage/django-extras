@@ -58,12 +58,12 @@ The superuser_required decorator
 .. function:: superuser_required([login_url=None, raise_exception=False])
 
     This decorator provides a simple way to restrict access to a particular
-    view to only users who have the *is_superuser* set. Rather than using
+    view to only users who have the *is_superuser* flag set. Rather than using
     the `~django.contrib.auth.decorators.user_passes_test()` decorator
     restricting a view to staff only can be written as::
 
-        from django_extras.contrib.auth.decorators import staff_required
-        @staff_required
+        from django_extras.contrib.auth.decorators import superuser_required
+        @superuser_required
         def my_view(request):
             ...
 
@@ -73,4 +73,5 @@ The superuser_required decorator
     Following from the change in Django 1.4 this decorator also includes the
     ``raise_exception`` parameter, If given, the decorator will raise
     :exc:`~django.core.exceptions.PermissionDenied`.
+
 
