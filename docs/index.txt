@@ -4,6 +4,14 @@
 Django Extras documentation
 ===========================
 
+Project Status
+==============
+
+This is a fairly new project, while this package is utilised in production on
+several projects the status will remain as beta until unit-test coverage and
+documentation has been expanded. Documentation as yet only covers a small part
+of the overall code base.
+
 Getting help
 ============
 
@@ -37,3 +45,10 @@ Other batteries included
 ========================
 
 * :doc:`Authentication <topics/auth>`
+
+Source code
+===========
+
+Full `source code`_ is available in Bit Bucket.
+
+.. _source code: https://bitbucket.org/timsavage/django-extras/src
