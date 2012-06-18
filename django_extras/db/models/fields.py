@@ -18,15 +18,13 @@ class ColorField(models.CharField):
     description = _("Color value")
 
     def __init__(self, *args, **kwargs):
-        kwargs['max_length'] = kwargs.get('max_length', 75)
+        kwargs.setdefault('max_length', 40)
         super(ColorField, self).__init__(*args, **kwargs)
 
     def formfield(self, **kwargs):
         # As with CharField, this will cause color validation to be performed
         # twice.
-        defaults = {
-            'form_class': forms.ColorPickerWidget,
-        }
+        defaults = {'widget': forms.ColorPickerWidget}
         defaults.update(kwargs)
         return super(ColorField, self).formfield(**defaults)
 
@@ -66,13 +64,6 @@ class MoneyField(models.DecimalField):
         if value is not None:
             value = value._amount
         super(MoneyField, self).get_db_prep_save(value, connection)
-
-    def formfield(self, **kwargs):
-        defaults = {
-#            'form_class': forms.DecimalField,
-        }
-        defaults.update(kwargs)
-        return super(MoneyField, self).formfield(**defaults)
 
     def south_field_triple(self):
         """
