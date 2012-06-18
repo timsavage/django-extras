@@ -32,8 +32,9 @@ A :class:`CharField` that checks that the value is a valid CSS color value.
 .. class:: MoneyField([max_digits=40, decimal_places=4, **options])
 
 A :class:`DecimalField` that sets up sensible defaults for monetary values, in
-addition the :class:`MoneyField` will return values as instances of the Money
-type. The :class:`Money` type is an extension of the Python decimal.
+addition the :class:`MoneyField` will return values as instances of the
+:class:`Money` type. The :class:`Money` type is based on the Pythons decimal
+object.
 
 .. note::
     The current implementation does not store the currency value along with the
