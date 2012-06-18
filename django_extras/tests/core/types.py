@@ -2,6 +2,8 @@
 from django import test
 from django_extras.core.types import Money
 
+
+#TODO: Add more tests to get complete coverage
 class MoneyTestCase(test.TestCase):
 
     LARGE = Money('200000000.0000')
