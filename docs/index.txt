@@ -32,6 +32,8 @@ Examples of this include:
 * additional model and form fields
 * greatly expanded collection of default response classes
 
+See :doc:`ref/index` full reference.
+
 First steps
 ===========
 
