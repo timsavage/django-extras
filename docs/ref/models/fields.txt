@@ -7,4 +7,42 @@ Model field reference
 
 .. currentmodule:: django_extras.db.models
 
-**TODO** Complete this section
+.. note::
+
+    All fields include support for south_ with an included
+    ``south_field_triple`` method.
+
+.. _south: http://south.aeracode.org/
+
+Field types
+===========
+
+.. currentmodule:: django_extras.db.models
+
+``ColorField``
+--------------
+
+.. class:: ColorField([max_length=40, **options])
+
+A :class:`CharField` that checks that the value is a valid CSS color value.
+
+``MoneyField``
+--------------
+
+.. class:: MoneyField([max_digits=40, decimal_places=4, **options])
+
+A :class:`DecimalField` that sets up sensible defaults for monetary values, in
+addition the :class:`MoneyField` will return values as instances of the Money
+type. The :class:`Money` type is an extension of the Python decimal.
+
+.. note::
+    The current implementation does not store the currency value along with the
+    value of the money field.
+
+``PercentField``
+--------------
+
+.. class:: PercentField(**options)
+
+A :class:`FloatField` that represents a percentage value that limits the range
+of values to between 0 and 100.
