@@ -1,8 +1,8 @@
 #coding=UTF-8
-from unittest import TestCase
-from django_extras.types import Money
+from django import test
+from django_extras.core.types import Money
 
-class MoneyTestCase(TestCase):
+class MoneyTestCase(test.TestCase):
 
     LARGE = Money('200000000.0000')
     SMALL = Money('100.000')

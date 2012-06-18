@@ -1,9 +1,9 @@
 from django.core import exceptions
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django_extras.core import validators
-from django_extras.types import Money
 from django_extras import forms
+from django_extras.core import validators
+from django_extras.core.types import Money
 
 
 class ColorField(models.CharField):
