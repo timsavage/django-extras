@@ -1,0 +1,10 @@
+=====================
+Model field reference
+=====================
+
+.. module:: django_extras.db.models.fields
+   :synopsis: Additional field types.
+
+.. currentmodule:: django_extras.db.models
+
+**TODO** Complete this section

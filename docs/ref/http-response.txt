@@ -1,0 +1,52 @@
+================
+Response objects
+================
+
+.. module:: django_extras.http
+   :synopsis: Additional classes for common responses.
+
+HttpResponse subclasses
+-----------------------
+
+Django extras includes a number of additional ``HttpResponse`` subclasses
+that handle different types of HTTP responses. These subclasses live in
+:mod:`django_extras.http`.
+
+.. class:: HttpResponseUnAuthorised
+
+    The constructor doesn't take any arguments. Use this to designate that a
+    logged in user does not have authorisation to access this URL (status code
+    401).
+
+.. class:: HttpResponseConflict
+
+    The constructor doesn't take any arguments. Use this to designate that a
+    request could not be completed due to a conflict with the current resource
+    state (status code 409).
+
+.. class:: HttpResponseNotImplemented
+
+    The constructor doesn't take any arguments. Use this to indicate that the
+    application does not support the functionality required to fulfill the
+    request (status code 501).
+
+.. class:: HttpResponseGatewayTimeout
+
+    The constructor doesn't take any arguments. Use this to indicate that the
+    request could not be completed due to a timeout connecting to an auxiliary
+    service (status code 504). This could be a request to a web service.
+
+.. class:: FileResponse
+
+    The constructor accepts the same ``content`` property as the default
+    :class:``HttpResponse`` class except it is interpreted as a file name or
+    file handle and a ``content_type`` and facilitates streaming the content
+    to the client. There is also an optional parameter
+    ``include_last_modified`` that defaults to *True* that will pass through
+    a last modified date of the specified file.
+
+.. class:: JsonResponse
+
+    Acts just like :class:``HttpResponse`` except will encode the first
+    parameter to JSON (using :class:``DjangoJSONEncoder``) and changes the
+    default ``content_type`` to *application/json*.
