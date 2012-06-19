@@ -2,7 +2,7 @@ from django import test
 from django_extras.core import validators
 
 
-class ColorValidator(test.TestCase):
+class ColorValidatorTestCase(test.TestCase):
     def test_hash(self):
         validators.validate_color('#123')
         validators.validate_color('#abc')
@@ -34,3 +34,17 @@ class ColorValidator(test.TestCase):
         validators.validate_color('hsla(23,45%,67%,0.1)')
         validators.validate_color('hsla(345,89%,90%,.2)')
         validators.validate_color('hsla(360,100%,100%,1)')
+
+
+
+
+class JsonValidatorTestCase(test.TestCase):
+    def invalid_json(self):
+        validators.validate_json('{"foo":"bar", "eek": 123, }')
+
+    def test_valid(self):
+        validators.validate_json('{"foo":"bar", "eek": 123}')
+
+    def test_invalid(self):
+        self.assertRaises(validators.ValidationError, self.invalid_json)
+

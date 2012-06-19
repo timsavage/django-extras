@@ -19,3 +19,9 @@ addition to, or in lieu of custom ``field.clean()`` methods.
 
     A :class:`RegexValidator` instance that ensures a value looks like a CSS
     color value.
+
+``validate_json``
+------------------
+.. data:: validate_json
+
+    A :class:`JsonValidator` instance that ensures a value is valid JSON.
