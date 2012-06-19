@@ -47,3 +47,11 @@ object.
 
 A :class:`FloatField` that represents a percentage value that limits the range
 of values to between 0 and 100.
+
+``JsonField``
+--------------
+
+.. class:: JsonField([dump_options={'cls': DjangoJSONEncoder}, load_options={}, **options])
+
+A :class:`TextField` handles serialisation/deserialization of JSON into the
+database.

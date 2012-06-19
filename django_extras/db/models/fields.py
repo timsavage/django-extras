@@ -1,13 +1,12 @@
 from django.core import exceptions
+from django.core.serializers.json import DjangoJSONEncoder
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.utils import simplejson
 from django_extras import forms
 from django_extras.core import validators
 from django_extras.core.types import Money
-
-
-_MODULE_NAME = 'django_extras.db.models.fields.'
 
 
 class ColorField(models.CharField):
@@ -27,14 +26,6 @@ class ColorField(models.CharField):
         defaults = {'widget': forms.ColorPickerWidget}
         defaults.update(kwargs)
         return super(ColorField, self).formfield(**defaults)
-
-    def south_field_triple(self):
-        """
-        Support for South
-        """
-        from south.modelsinspector import introspector
-        args, kwargs = introspector(self)
-        return _MODULE_NAME + self.__class__.__name__, args, kwargs
 
 
 class MoneyField(models.DecimalField):
@@ -65,14 +56,6 @@ class MoneyField(models.DecimalField):
             value = value._amount
         super(MoneyField, self).get_db_prep_save(value, connection)
 
-    def south_field_triple(self):
-        """
-        Support for South
-        """
-        from south.modelsinspector import introspector
-        args, kwargs = introspector(self)
-        return _MODULE_NAME + self.__class__.__name__, args, kwargs
-
 
 class PercentField(models.FloatField):
     """
@@ -83,7 +66,52 @@ class PercentField(models.FloatField):
         MaxValueValidator(100),
     ]
 
-    def south_field_triple(self):
-        from south.modelsinspector import introspector
-        args, kwargs = introspector(self)
-        return _MODULE_NAME + self.__class__.__name__, args, kwargs
+
+class JsonField(models.TextField):
+    """
+    Field that stores a dictionary in the database as JSON.
+    """
+    description = _("JSON dictionary")
+
+    __metaclass__ = models.SubfieldBase
+
+    def __init__(self, *args, **kwargs):
+        self.dump_options = { 'cls': DjangoJSONEncoder, }
+        self.load_options = {}
+        self.dump_options.update(kwargs.pop('dump_options', {}))
+        self.load_options.update(kwargs.pop('load_options', {}))
+        super(JsonField, self).__init__(*args, **kwargs)
+
+    def to_python(self, value):
+        if isinstance(value, basestring):
+            try:
+                return simplejson.loads(value, **self.load_options)
+            except ValueError:
+                pass
+        return value
+
+    def get_db_prep_value(self, value, connection, prepared=False):
+        if isinstance(value, basestring):
+            return value
+        return simplejson.dumps(value, **self.dump_options)
+
+    def value_to_string(self, obj):
+        return super(JsonField, self).value_to_string(obj)
+
+    def value_from_object(self, obj):
+        return simplejson.dumps(super(JsonField, self).value_from_object(obj))
+
+    def formfield(self, **kwargs):
+        defaults = {'form_class': forms.JsonField}
+        defaults.update(kwargs)
+        return super(JsonField, self).formfield(**defaults)
+
+
+try:
+    from south.modelsinspector import add_introspection_rules
+    add_introspection_rules([], ["^django_extras\.db\.models\.fields\.ColorField"])
+    add_introspection_rules([], ["^django_extras\.db\.models\.fields\.MoneyField"])
+    add_introspection_rules([], ["^django_extras\.db\.models\.fields\.PercentField"])
+    add_introspection_rules([], ["^django_extras\.db\.models\.fields\.JsonField"])
+except ImportError:
+    pass
