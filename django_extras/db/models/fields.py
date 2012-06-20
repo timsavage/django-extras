@@ -13,18 +13,23 @@ class ColorField(models.CharField):
     """
     Database field that represents a color value.
     """
-    default_validators = [validators.validate_color]
     description = _("Color value")
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, verbose_name=None, name=None, allow_alpha=False, **kwargs):
         kwargs.setdefault('max_length', 40)
-        super(ColorField, self).__init__(*args, **kwargs)
+        super(ColorField, self).__init__(verbose_name, name, **kwargs)
+
+        self.allow_alpha = allow_alpha
+        if allow_alpha:
+            self.validators.append(validators.validate_alpha_color)
+        else:
+            self.validators.append(validators.validate_color)
 
     def formfield(self, **kwargs):
-        # As with CharField, this will cause color validation to be performed
-        # twice.
-        defaults = {'widget': forms.ColorPickerWidget}
+        defaults = {'form_class': forms.ColorField}
         defaults.update(kwargs)
+        if defaults['form_class'] is forms.ColorField:
+            defaults.setdefault('allow_alpha', self.allow_alpha)
         return super(ColorField, self).formfield(**defaults)
 
 
@@ -107,6 +112,14 @@ class JsonField(models.TextField):
         return super(JsonField, self).formfield(**defaults)
 
 
+# Notice: This has been removed for the time being as there are not suitable
+#
+# Register special admin widgets if admin is in use.
+#if 'django.contrib.admin' in settings.INSTALLED_APPS:
+#    from django.contrib.admin import options
+#    options.FORMFIELD_FOR_DBFIELD_DEFAULTS[ColorField] = { 'widget':  }
+
+# Register fields with south.
 try:
     from south.modelsinspector import add_introspection_rules
     add_introspection_rules([], ["^django_extras\.db\.models\.fields\.ColorField"])
@@ -115,3 +128,4 @@ try:
     add_introspection_rules([], ["^django_extras\.db\.models\.fields\.JsonField"])
 except ImportError:
     pass
+

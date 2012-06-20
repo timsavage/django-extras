@@ -20,6 +20,13 @@ addition to, or in lieu of custom ``field.clean()`` methods.
     A :class:`RegexValidator` instance that ensures a value looks like a CSS
     color value.
 
+``validate_alpha_color``
+------------------
+.. data:: validate_alpha_color
+
+    A :class:`RegexValidator` instance that ensures a value looks like a CSS
+    color value. Supports color definitions with alpha blending.
+
 ``validate_json``
 ------------------
 .. data:: validate_json
