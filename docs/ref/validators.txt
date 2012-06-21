@@ -1,0 +1,34 @@
+==========
+Validators
+==========
+
+.. module:: django_extras.core.validators
+    :synopsis: Validation utilities
+
+Additional validators
+=====================
+
+The :mod:`django_extras.core.validators` module contains a collection of
+callable validators for use with model and form fields. They're used internally
+but are available for use with your own fields, too. They can be used in
+addition to, or in lieu of custom ``field.clean()`` methods.
+
+``validate_color``
+------------------
+.. data:: validate_color
+
+    A :class:`RegexValidator` instance that ensures a value looks like a CSS
+    color value.
+
+``validate_alpha_color``
+------------------
+.. data:: validate_alpha_color
+
+    A :class:`RegexValidator` instance that ensures a value looks like a CSS
+    color value. Supports color definitions with alpha blending.
+
+``validate_json``
+------------------
+.. data:: validate_json
+
+    A :class:`JsonValidator` instance that ensures a value is valid JSON.

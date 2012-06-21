@@ -1,5 +1,4 @@
 from collections import OrderedDict
-from django.db.models.fields import NOT_PROVIDED
 
 
 class ChoiceEnum(object):

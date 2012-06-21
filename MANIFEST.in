@@ -1,5 +1,5 @@
 include README
 include LICENSE
 include MANIFEST.in
-recursive-include tests *
+recursive-include django_extras/fixtures *
 recursive-include django_extras/static *

@@ -1,0 +1,58 @@
+=====================
+Model field reference
+=====================
+
+.. module:: django_extras.db.models.fields
+   :synopsis: Additional field types.
+
+.. currentmodule:: django_extras.db.models
+
+.. note::
+
+    All fields include support for south_ with an included
+    ``south_field_triple`` method.
+
+.. _south: http://south.aeracode.org/
+
+Field types
+===========
+
+.. currentmodule:: django_extras.db.models
+
+``ColorField``
+--------------
+
+.. class:: ColorField([allow_alpha=False, max_length=40, **options])
+
+A :class:`CharField` that checks that the value is a valid CSS color value.
+``allow_alpha`` controls if colors can support alpha values.
+
+``MoneyField``
+--------------
+
+.. class:: MoneyField([max_digits=40, decimal_places=4, **options])
+
+A :class:`DecimalField` that sets up sensible defaults for monetary values, in
+addition the :class:`MoneyField` will return values as instances of the
+:class:`Money` type. The :class:`Money` type is based on the Pythons decimal
+object.
+
+.. note::
+    The current implementation does not store the currency value along with the
+    value of the money field.
+
+``PercentField``
+--------------
+
+.. class:: PercentField(**options)
+
+A :class:`FloatField` that represents a percentage value that limits the range
+of values to between 0 and 100.
+
+``JsonField``
+--------------
+
+.. class:: JsonField([dump_options={'cls': DjangoJSONEncoder}, load_options={}, **options])
+
+A :class:`TextField` handles serialisation/deserialization of JSON into the
+database.

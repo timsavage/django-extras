@@ -19,7 +19,7 @@ database models.
 Convenience decorators
 ======================
 
-.. currentmodule:: django_extras.contib.auth.decorators
+.. currentmodule:: django_extras.contrib.auth.decorators
 
 The staff_required decorator
 ----------------------------
@@ -74,4 +74,103 @@ The superuser_required decorator
     ``raise_exception`` parameter, If given, the decorator will raise
     :exc:`~django.core.exceptions.PermissionDenied`.
 
+Ownership Mixin Models
+======================
 
+.. currentmodule:: django_extras.contrib.auth.models
+
+Two mixin classes are provided that provide a consistent API for assigning
+ownership of a model instance to a user object.
+
+Example::
+
+    class MyModel(SingleOwnerMixin, models.Model):
+        name = models.CharField(max_length=50)
+
+Both :class:`SingleOwnerMixin` and :class:`MultipleOwnerMixin` provide the
+following methods.
+
+Many methods include `include_staff` and `include_superuser` parameters, these
+are used to treat staff and superuser users as if they are owners of the
+instance.
+
+.. class:: OwnerMixinBase
+
+.. method:: OwnerMixinBase.owned_by(user, [include_staff=False, include_superuser=False])
+
+    Returns a boolean value to indicate if the supplied user is a valid owner
+    of model instance.
+
+.. method:: OwnerMixinBase.owner_list()
+
+    Returns a list of :class:`User` models that are owners of the model
+    instance. A list is returned by both single and multiple versions of the
+    mixin.
+
+``SingleOwnerMixin``
+--------------------
+
+.. class:: SingleOwnerMixin
+
+    This class provides a simple way to enable a single user to own a model
+    instance.
+
+    .. attribute:: owner
+
+        ``User`` object as provided by a ``ForeignKey`` model field.
+
+    .. note::
+
+        By default the ``related_name`` parameter is set to:
+        ``'%(app_label)s_%(class)s_owner'``
+
+``MultipleOwnerMixin``
+----------------------
+
+.. class:: MultipleOwnerMixin
+
+    This class provides a simple way to enable multiple users to own a model
+    instance.
+
+    .. attribute:: owners
+
+        ``RelatedManager`` object as provided by a ``ManyToManyField`` model
+        field.
+
+    .. note::
+
+        By default the ``related_name`` parameter is set to:
+        ``'%(app_label)s_%(class)s_owners'``
+
+``OwnerMixinManager``
+---------------------
+
+.. class:: OwnerMixinManager
+
+    Manager class used by :class:`SingleOwnerMixin` and
+    :class:`MultipleOwnerMixin` to simplify obtaining a list of all model
+    instances owned by a particular user.
+
+Fetching owned instances
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. method:: OwnerMixinManager.owned_by(user, [include_staff=False, include_superuser=False])
+
+Returns a ``QuerySet`` filtered by the user or users. The user parameter can
+be either a single :class:`User` object, a sequence of :class:`User` objects or
+a single or sequence of user primary keys.
+
+Example::
+
+    # Single user
+    >>> MyModel.objects.owned_by(request.user)
+    [<MyModel: Foo>, <MyModel: Bar>]
+
+    # Multiple primary keys
+    >>> MyModel.objects.owned_by([1, 2, 3])
+    [<MyModel: Foo>, <MyModel: Bar>, <MyModel: Eek>]
+
+.. note::
+    It is not possible to use the `include_staff` and `include_superuser`
+    parameters along when passing a sequence for the `user` parameter. A
+    :exe:`TypeError` exception will be raised in this case.
