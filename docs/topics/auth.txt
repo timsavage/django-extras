@@ -90,9 +90,9 @@ Example::
 Both :class:`SingleOwnerMixin` and :class:`MultipleOwnerMixin` provide the
 following methods.
 
-The `include_staff` and `include_superuser` parameters can be used to treat
-staff and superuser users as if they are owners of the instance. These
-parameters are used on many methods.
+Many methods include `include_staff` and `include_superuser` parameters, these
+are used to treat staff and superuser users as if they are owners of the
+instance.
 
 .. class:: OwnerMixinBase
 
@@ -170,7 +170,7 @@ Example::
     >>> MyModel.objects.owned_by([1, 2, 3])
     [<MyModel: Foo>, <MyModel: Bar>, <MyModel: Eek>]
 
-note::
+.. note::
     It is not possible to use the `include_staff` and `include_superuser`
     parameters along when passing a sequence for the `user` parameter. A
     :exe:`TypeError` exception will be raised in this case.

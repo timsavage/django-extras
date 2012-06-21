@@ -1,9 +1,12 @@
 from distutils.core import setup
-from distutils.command.install_data import install_data
-from distutils.command.install import INSTALL_SCHEMES
-from distutils.sysconfig import get_python_lib
 import os
-import sys
+
+# Hack to force dist utils to install data files in correct location along with
+# Python package.
+from distutils.command.install import INSTALL_SCHEMES
+for scheme in INSTALL_SCHEMES.values():
+    scheme['data'] = scheme['purelib']
+
 
 def fullsplit(path, result=None):
     """

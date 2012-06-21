@@ -22,9 +22,10 @@ Field types
 ``ColorField``
 --------------
 
-.. class:: ColorField([max_length=40, **options])
+.. class:: ColorField([allow_alpha=False, max_length=40, **options])
 
 A :class:`CharField` that checks that the value is a valid CSS color value.
+``allow_alpha`` controls if colors can support alpha values.
 
 ``MoneyField``
 --------------
@@ -47,3 +48,11 @@ object.
 
 A :class:`FloatField` that represents a percentage value that limits the range
 of values to between 0 and 100.
+
+``JsonField``
+--------------
+
+.. class:: JsonField([dump_options={'cls': DjangoJSONEncoder}, load_options={}, **options])
+
+A :class:`TextField` handles serialisation/deserialization of JSON into the
+database.
