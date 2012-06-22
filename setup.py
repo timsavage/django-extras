@@ -43,7 +43,7 @@ for dirpath, dirnames, filenames in os.walk(django_extras_dir):
 version = __import__('django_extras').get_version()
 
 setup(
-    name = "Django-Extras",
+    name = "django-extras",
     version = version,
     url = "https://bitbucket.org/timsavage/django-extras",
     author = "Tim Savage",
