@@ -1,5 +1,5 @@
 import os.path
-
+from email.utils import formatdate as format_http_date
 from django.core.serializers import json
 from django.utils import simplejson
 from django.http import *
