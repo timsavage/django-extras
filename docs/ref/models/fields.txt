@@ -9,8 +9,7 @@ Model field reference
 
 .. note::
 
-    All fields include support for south_ with an included
-    ``south_field_triple`` method.
+    All fields registered with south_ (if used by your project).
 
 .. _south: http://south.aeracode.org/
 
