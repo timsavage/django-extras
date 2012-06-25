@@ -7,6 +7,7 @@ API Reference
 
    contrib/auth
    forms/index
+   middleware
    models/index
    http-response
    validators

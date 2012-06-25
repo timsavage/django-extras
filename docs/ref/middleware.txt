@@ -1,0 +1,19 @@
+==========
+Middleware
+==========
+
+.. module:: django_extras.middleware
+    :synopsis: Additional middleware
+
+Timing Middleware
+=================
+
+.. module:: django_extras.middleware.timing
+    :class: TimingMiddleware
+
+    Adds a header to all responses with the total time spent generating a
+    response. This middleware component should be added as early as possible in
+    the list of middleware classes to get best results.
+
+    The name of the header returned to the browser is ``X-PROCESSING_TIME_MS``,
+    time is in milliseconds.
