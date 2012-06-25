@@ -9,7 +9,9 @@ Timing Middleware
 =================
 
 .. module:: django_extras.middleware.timing
-    :class: TimingMiddleware
+    :synopsis: Timing middleware
+
+.. class:: TimingMiddleware
 
     Adds a header to all responses with the total time spent generating a
     response. This middleware component should be added as early as possible in
