@@ -8,15 +8,16 @@ class TimingMiddleware(object):
     This value is the total time spent processing a user request in microseconds.
     """
     REQUEST_ATTR = '_timing_start'
+    RESPONSE_HEADER = 'X-PROCESSING_TIME_MS'
 
     def process_request(self, request):
         setattr(request, self.REQUEST_ATTR, datetime.datetime.now())
 
     def process_response(self, request, response):
-        start = getattr(request, self.REQUEST_ATTR)
+        start = getattr(request, self.REQUEST_ATTR, None)
         if start:
             end = datetime.datetime.now()
             length = end - start
-            response['X-PROCESSING_TIME_MS'] = str(length.microseconds)
+            response[self.RESPONSE_HEADER] = str(length.microseconds)
         return response
     
