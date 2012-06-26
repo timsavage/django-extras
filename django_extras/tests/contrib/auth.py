@@ -252,10 +252,10 @@ class SingleOwnerTestCase(test.TransactionTestCase):
         SingleOwner.objects.create(name="Test 4", description="123", owner_id=4) # Superuser
 
     def test_get_owner_pks(self):
-        actual = SingleOwner.objects.get(pk=1)._get_owner_pks()
+        actual = SingleOwner.objects.get(pk=1).get_owner_pks()
         self.assertListEqual([1], actual)
 
-        actual = SingleOwner.objects.get(pk=2)._get_owner_pks()
+        actual = SingleOwner.objects.get(pk=2).get_owner_pks()
         self.assertListEqual([2], actual)
 
     def test_get_owners_list(self):
@@ -281,10 +281,10 @@ class MultiOwnerTestTestCase(test.TransactionTestCase):
         MultiOwner.objects.create(name="Test 4", description="123")
 
     def test_get_owner_pks(self):
-        actual = MultiOwner.objects.get(pk=1)._get_owner_pks()
+        actual = MultiOwner.objects.get(pk=1).get_owner_pks()
         self.assertSequenceEqual([1], actual)
 
-        actual = MultiOwner.objects.get(pk=2)._get_owner_pks()
+        actual = MultiOwner.objects.get(pk=2).get_owner_pks()
         self.assertSequenceEqual([1, 2], actual)
 
     def test_get_owners_list(self):

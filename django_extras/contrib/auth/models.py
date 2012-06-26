@@ -58,7 +58,7 @@ class OwnerMixinBase(models.Model):
     class Meta:
         abstract = True
 
-    def _get_owner_pks(self):
+    def get_owner_pks(self):
         """
         Get all primary keys from owners.
 
@@ -86,7 +86,13 @@ class OwnerMixinBase(models.Model):
                 user = User.objects.only('is_staff', 'is_superuser').get(pk=user_pk)
             if (include_staff and user.is_staff) or (include_superuser and user.is_superuser):
                 return True
-        return user_pk in self._get_owner_pks()
+        return user_pk in self.get_owner_pks()
+
+    def is_not_owned_by(self, user, include_staff=False, include_superuser=False):
+        """
+        Convenience method, is an inversion of is_owned_by.
+        """
+        return not self.is_owned_by(user, include_staff, include_superuser)
 
 
 class SingleOwnerMixin(OwnerMixinBase):
@@ -116,7 +122,7 @@ class SingleOwnerMixin(OwnerMixinBase):
         """
         return [self.owner]
 
-    def _get_owner_pks(self):
+    def get_owner_pks(self):
         return [self.owner_id]
 
 
@@ -160,5 +166,5 @@ class MultipleOwnerMixin(OwnerMixinBase):
         """
         return list(self.owners.all())
 
-    def _get_owner_pks(self):
+    def get_owner_pks(self):
         return self.owners.values_list('id', flat=True)
