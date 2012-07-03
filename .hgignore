@@ -1,9 +1,17 @@
 syntax: glob
+# Unix cruft
 *~
+
+# Python cruft
 *.py[co]
 *.egg-info
-build*
-docs/*.html
 
 # IDE cruft
 .idea/*
+atlassian-ide-plugin.xml
+
+# Project artifacts
+build*
+dist*
+docs/*.html
+MANIFEST
