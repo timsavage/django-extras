@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.core.exceptions import PermissionDenied
 
 
-def get_owned_object_or_40x(klass, owner, include_staff=False, include_superuser=False, *args, **kwargs):
+def get_owned_object_or_40x(klass, owner, include_staff=False, include_superuser=True, *args, **kwargs):
     """
     Returns an object if it can be found (using get_object_or_404).
     If the object is not owned by the supplied owner a 403 will be raised.

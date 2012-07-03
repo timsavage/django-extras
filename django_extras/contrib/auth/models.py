@@ -26,7 +26,7 @@ class OwnerMixinManager(models.Manager):
         filter = {self.__owner_filter: user_pk}
         return self.filter(**filter)
 
-    def owned_by(self, user, include_staff=False, include_superuser=False):
+    def owned_by(self, user, include_staff=False, include_superuser=True):
         """
         Filter by a user(s).
 
