@@ -173,7 +173,7 @@ Example::
 .. note::
     It is not possible to use the `include_staff` and `include_superuser`
     parameters along when passing a sequence for the `user` parameter. A
-    :exe:`TypeError` exception will be raised in this case.
+    :class:`TypeError` exception will be raised in this case.
 
 
 Shortcuts
@@ -188,5 +188,5 @@ If the object cannot be loaded an :class:`Http404` exception is raised if an
 object is loaded but the owner is not valid a :class:`PermissionDenied`
 exception is raised.
 
-Is with the other extensions `include_staff` and `include_superuser` flags are
+As with the other extensions `include_staff` and `include_superuser` flags are
 provided. `*args` and `**kwargs` work in the same way as `get_object_or_404`.
