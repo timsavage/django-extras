@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from django.db.models.fields import NOT_PROVIDED
 
 
 class ChoiceEnum(object):
@@ -43,7 +44,7 @@ class ChoiceEnum(object):
         MY_CHOICES % 'value'
 
     """
-    __slots__ = ('__default', '__value_map', '__choices', '__max_length')
+    __slots__ = ('__choices', '__default', '__max_length', '__value_map')
 
     def __init__(self, *args, **entries):
         if args:
@@ -135,4 +136,4 @@ class ChoiceEnum(object):
         """
         Resolve a value to it's display version.
         """
-        return self._value_map[value]
+        return self.__value_map[value]

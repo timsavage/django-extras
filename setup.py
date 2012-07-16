@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup
 import os
 
 # Hack to force dist utils to install data files in correct location along with
