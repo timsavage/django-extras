@@ -31,5 +31,5 @@ class JsonResponseTestCase(test.TestCase):
         })
 
         actual = ''.join(target)
-        self.assertEqual(actual, '{"foo": "bar", "eek": "2012-06-25 11:09:48"}')
+        self.assertEqual(actual, '{"foo": "bar", "eek": "2012-06-25T11:09:48"}')
         self.assertEqual(target['Content-Type'], 'application/json')
