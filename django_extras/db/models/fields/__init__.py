@@ -105,9 +105,5 @@ class LongitudeField(models.FloatField):
 try:
     from south.modelsinspector import add_introspection_rules
     add_introspection_rules([], ["^django_extras\.db\.models\.fields\.\w+Field"])
-#    add_introspection_rules([], ["^django_extras\.db\.models\.fields\.MoneyField"])
-#    add_introspection_rules([], ["^django_extras\.db\.models\.fields\.PercentField"])
-#    add_introspection_rules([], ["^django_extras\.db\.models\.fields\.LatitudeField"])
-#    add_introspection_rules([], ["^django_extras\.db\.models\.fields\.LongitudeField"])
 except ImportError:
     pass
