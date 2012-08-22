@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from django_extras import forms
 from django_extras.core import validators
 from django_extras.core.types import Money
+# Convenience Imports
 from django_extras.db.models.fields.json import JsonField
 
 
@@ -12,6 +13,9 @@ class ColorField(models.CharField):
     """
     Database field that represents a color value.
     """
+    default_error_messages = {
+        'invalid': _(u'This value must be a CSS colour value.'),
+    }
     description = _("Color value")
 
     def __init__(self, verbose_name=None, name=None, allow_alpha=False, **kwargs):
