@@ -1,14 +1,14 @@
 (function ($) {
 
     $(function () {
-        $('input.django_extras-colorpicker').colorpicker({
-            hide: function (e, ui) {
-                $(this).val('#'+ui.hex);
-                $('.ui-colorpicker').css('display', 'none');
+        $('input.django_extras-colorpicker').colorPicker({
+            color: '#fff',
+            onSubmit: function(hsb, hex, rgb, el) {
+                $(el).val('#'+hex);
+                $(el).colorPickerHide();
             },
-            submit: function (e, ui) {
-                $(this).val('#'+ui.hex);
-                $('.ui-colorpicker').css('display', 'none');
+            onBeforeShow: function () {
+                $(this).colorPickerSetColor(this.value);
             }
         });
     });
