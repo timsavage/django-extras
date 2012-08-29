@@ -6,7 +6,7 @@ Response objects
    :synopsis: Additional classes for common responses.
 
 HttpResponse subclasses
------------------------
+=======================
 
 Django extras includes a number of additional ``HttpResponse`` subclasses
 that handle different types of HTTP responses. These subclasses are defined in
@@ -14,7 +14,7 @@ that handle different types of HTTP responses. These subclasses are defined in
 
 
 Common HTTP response types
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------
 
 Common response codes, most of these codes are defined in the
 `W3C Protocol specification`_. This collection also includes status codes that
@@ -24,7 +24,8 @@ already defined in Django.
 .. _W3C Protocol specification: http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
 
 
-*Successful 2xx responses*
+Successful 2xx responses
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. class:: HttpResponseCreated
 
@@ -51,7 +52,8 @@ already defined in Django.
     Status code 206
 
 
-*Redirection 3xx responses*
+Redirection 3xx responses
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 All responses within the 3xx class inherit from :class:`HttpResponseRedirect`.
 
@@ -60,7 +62,8 @@ All responses within the 3xx class inherit from :class:`HttpResponseRedirect`.
     Status code 303
 
 
-*Client Error 4xx responses*
+Client Error 4xx responses
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. class:: HttpResponseUnAuthorised
 
@@ -119,7 +122,8 @@ All responses within the 3xx class inherit from :class:`HttpResponseRedirect`.
     Status code 426
 
 
-*Server Error 5xx responses*
+Server Error 5xx responses
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. class:: HttpResponseNotImplemented
 
@@ -143,7 +147,7 @@ All responses within the 3xx class inherit from :class:`HttpResponseRedirect`.
 
 
 Enhanced response types
-~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------
 
 .. class:: FileResponse
 
