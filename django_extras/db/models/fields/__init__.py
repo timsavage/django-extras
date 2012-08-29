@@ -78,7 +78,7 @@ class PercentField(models.FloatField):
 class LatitudeField(models.FloatField):
     """Latitude field
 
-    Ensures value is in hte range (-90)-90.
+    Ensures value is in the range (-90)-90.
     """
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('validators', [
@@ -91,7 +91,7 @@ class LatitudeField(models.FloatField):
 class LongitudeField(models.FloatField):
     """Longitude field
 
-    Ensures value is in hte range (-180)-180.
+    Ensures value is in the range (-180)-180.
     """
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('validators', [

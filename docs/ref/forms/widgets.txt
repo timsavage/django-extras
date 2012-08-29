@@ -1,0 +1,69 @@
+=====================
+Form widget reference
+=====================
+
+.. module:: django_extras.forms.widgets
+   :synopsis: Additional form widgets.
+
+
+Widget types
+============
+
+.. currentmodule:: django_extras.forms.widgets
+
+
+HTML5 Input types
+-----------------
+
+``Html5EmailInput``
+~~~~~~~~~~~~~~~~~~~
+
+.. class:: Html5EmailInput
+
+    HTML 5 email input.
+
+
+``Html5NumberInput``
+~~~~~~~~~~~~~~~~~~~~
+
+.. class:: Html5NumberInput
+
+    HTML 5 number input.
+
+
+``Html5DateInput``
+~~~~~~~~~~~~~~~~~~
+
+.. class:: Html5DateInput
+
+    HTML 5 date input.
+
+
+``Html5DateTimeInput``
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. class:: Html5DateTimeInput
+
+    HTML 5 datetime input.
+
+
+``Html5TimeInput``
+~~~~~~~~~~~~~~~~~~
+
+.. class:: Html5TimeInput
+
+    HTML 5 time input.
+
+
+
+JQuery enhanced widgets
+-----------------------
+
+``JQueryColorPicker``
+~~~~~~~~~~~~~~~~~~~~~
+
+.. class:: JQueryColorPicker
+
+    Widget that displays a color picker. This widget assumes jQuery has been
+    included on the page. JavaScript and CSS is included and is defined using
+    Django media definitions.

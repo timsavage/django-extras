@@ -12,6 +12,7 @@ def _generate_key(instance_or_type, values, postfix=None):
         key += ':' + postfix
     return key
 
+
 def generate_key(instance_or_type, *args, **kwargs):
     """
     Generate a cache/no-sql key based from a model instance or type.
@@ -22,8 +23,10 @@ def generate_key(instance_or_type, *args, **kwargs):
     field_names.append('pk')
     for field in kwargs.iterkeys():
         if field not in field_names:
-            raise AttributeError('Model "%s" has no field "%s".' % (instance_or_type._meta.module_name, field))
+            raise AttributeError('Model "%s" has no field "%s".' % (
+                instance_or_type._meta.module_name, field))
     return _generate_key(instance_or_type, kwargs.items(), '-'.join(args))
+
 
 def instance_key(instance, fields=None, postfix=None):
     """
