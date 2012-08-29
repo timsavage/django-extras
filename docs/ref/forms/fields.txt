@@ -17,10 +17,10 @@ Field types
 
 .. class:: ColorField([allow_alpha=False, max_length=40, **options])
 
-A :class:`CharField` that checks that the value is a valid CSS color value.
-``allow_alpha`` controls if colors can support alpha values.
+    A :class:`CharField` that checks that the value is a valid CSS color value.
+    ``allow_alpha`` controls if colors can support alpha values.
 
-Specifies that the default widget is the :class:`JQueryColorPicker`.
+    Specifies that the default widget is the :class:`JQueryColorPicker`.
 
 
 ``JsonField``
@@ -28,5 +28,5 @@ Specifies that the default widget is the :class:`JQueryColorPicker`.
 
 .. class:: JsonField([dump_options={'cls': DjangoJSONEncoder}, load_options={}, **options])
 
-A :class:`TextField` that handles serialisation/deserialization of JSON
-structures for display in a Text input.
+    A :class:`TextField` that handles serialisation/deserialization of JSON
+    structures for display in a Text input.

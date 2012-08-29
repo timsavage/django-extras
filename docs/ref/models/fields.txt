@@ -24,8 +24,8 @@ Field types
 
 .. class:: ColorField([allow_alpha=False, max_length=40, **options])
 
-A :class:`CharField` that checks that the value is a valid CSS color value.
-``allow_alpha`` controls if colors can support alpha values.
+    A :class:`CharField` that checks that the value is a valid CSS color value.
+    ``allow_alpha`` controls if colors can support alpha values.
 
 
 ``MoneyField``
@@ -33,10 +33,10 @@ A :class:`CharField` that checks that the value is a valid CSS color value.
 
 .. class:: MoneyField([max_digits=40, decimal_places=4, **options])
 
-A :class:`DecimalField` that sets up sensible defaults for monetary values, in
-addition the :class:`MoneyField` will return values as instances of the
-:class:`Money` type. The :class:`Money` type is based on Pythons decimal
-object.
+    A :class:`DecimalField` that sets up sensible defaults for monetary values, in
+    addition the :class:`MoneyField` will return values as instances of the
+    :class:`Money` type. The :class:`Money` type is based on Pythons decimal
+    object.
 
 .. note::
     The current implementation does not store the currency code with the money
@@ -48,8 +48,8 @@ object.
 
 .. class:: PercentField(**options)
 
-A :class:`FloatField` that represents a percentage value. Validates provided value to
-ensure it is within the range 0 to 100.
+    A :class:`FloatField` that represents a percentage value. Validates provided value to
+    ensure it is within the range 0 to 100.
 
 
 ``LatitudeField``
@@ -57,8 +57,8 @@ ensure it is within the range 0 to 100.
 
 .. class:: LatitudeField(**options)
 
-A :class:`FloatField` that represents a latitude. Validates provided value to
-ensure it is within the range -90.0 to 90.0
+    A :class:`FloatField` that represents a latitude. Validates provided value to
+    ensure it is within the range -90.0 to 90.0
 
 
 
@@ -67,8 +67,8 @@ ensure it is within the range -90.0 to 90.0
 
 .. class:: LongitudeField(**options)
 
-A :class:`FloatField` that represents a longitude. Values are validated
-to be within the range -180.0 to 180.0.
+    A :class:`FloatField` that represents a longitude. Values are validated
+    to be within the range -180.0 to 180.0.
 
 
 ``JsonField``
@@ -76,5 +76,5 @@ to be within the range -180.0 to 180.0.
 
 .. class:: JsonField([dump_options={'cls': DjangoJSONEncoder}, load_options={}, **options])
 
-A :class:`TextField` that handles serialisation/deserialization of JSON
-structures into a database field.
+    A :class:`TextField` that handles serialisation/deserialization of JSON
+    structures into a database field.
