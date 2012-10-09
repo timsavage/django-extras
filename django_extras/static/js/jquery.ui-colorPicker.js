@@ -481,4 +481,4 @@
 		colorPickerShow: colorPicker.showPicker,
 		colorPickerSetColor: colorPicker.setColor
 	});
-})(jQuery);
+})(jQuery || django.jQuery);
