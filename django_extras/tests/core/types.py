@@ -40,41 +40,49 @@ class MoneyTestCase(test.TestCase):
 
 class LatitudeTestCase(test.TestCase):
     def testEmpty(self):
-        self.failUnlessEqual(latitude(), 0.0)
+        self.assertEqual(0.0, latitude())
 
     def testOutOfRange(self):
-        self.failUnlessRaises(ValueError, latitude, 91.0)
-        self.failUnlessRaises(ValueError, latitude, -91.0)
+        with self.assertRaises(ValueError):
+            latitude(91.0)
+        with self.assertRaises(ValueError):
+            latitude(-91.0)
 
     def testInvalidType(self):
-        self.failUnlessRaises(ValueError, latitude, 91)
-        self.failUnlessRaises(ValueError, latitude, "91")
+        with self.assertRaises(ValueError):
+            latitude(91)
+        with self.assertRaises(ValueError):
+            latitude("91")
 
     def testStrPositive(self):
         l = latitude(27 + 27.9487 / 60)
-        self.failUnlessEqual(str(l), "27°27'56.922000\"N")
+        self.assertEqual("27°27'56.922000\"N", str(l))
 
     def testStrNegative(self):
         l = latitude(-(27 + 27.9487 / 60))
-        self.failUnlessEqual(str(l), "27°27'56.922000\"S")
+        self.assertEqual("27°27'56.922000\"S", str(l))
 
 
 class LongitudeTestCase(test.TestCase):
     def testEmpty(self):
-        self.failUnlessEqual(longitude(), 0.0)
+        self.assertEqual(0.0, longitude())
 
     def testOutOfRange(self):
-        self.failUnlessRaises(ValueError, longitude, 191.0)
-        self.failUnlessRaises(ValueError, longitude, -191.0)
+        with self.assertRaises(ValueError):
+            longitude(191.0)
+        with self.assertRaises(ValueError):
+            longitude(-191.0)
 
     def testInvalidType(self):
-        self.failUnlessRaises(ValueError, longitude, 91)
-        self.failUnlessRaises(ValueError, longitude, "91")
+        with self.assertRaises(ValueError):
+            longitude(91)
+        with self.assertRaises(ValueError):
+            longitude("91")
 
     def testStrPositive(self):
         l = longitude(153 + 05.3408 / 60)
-        self.failUnlessEqual(str(l), "153°05'20.448000\"E")
+        self.assertEqual("153°05'20.448000\"E", str(l))
 
     def testStrNegative(self):
         l = longitude(-(153 + 05.3408 / 60))
-        self.failUnlessEqual(str(l), "153°05'20.448000\"W")
+        self.assertEqual("153°05'20.448000\"W", str(l))
