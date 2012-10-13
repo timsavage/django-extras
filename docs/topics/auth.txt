@@ -26,10 +26,10 @@ The staff_required decorator
 
 .. function:: staff_required([include_superusers=True, login_url=None, raise_exception=False])
 
-    This decorator provides a simple way to restrict access to a particular
-    view to only users who have the *is_staff* set. Rather than using the
+    This decorator provides a simple way of restricting access to a particular
+    view to users who have the *is_staff* flag set. Rather than using the
     `~django.contrib.auth.decorators.user_passes_test()` decorator
-    restricting a view to staff only can be written as::
+    restricting a view to staff can be written as::
 
         from django_extras.contrib.auth.decorators import staff_required
         @staff_required
@@ -48,8 +48,8 @@ The staff_required decorator
     As in the :func:`~decorators.login_required`, ``login_url`` defaults to
     :setting:`settings.LOGIN_URL <LOGIN_URL>`.
 
-    Following from the change in Django 1.4 this decorator also includes the
-    ``raise_exception`` parameter, If given, the decorator will raise
+    Mirroring the change in Django 1.4 this decorator also accepts the
+    ``raise_exception`` parameter. If given, the decorator will raise
     :exc:`~django.core.exceptions.PermissionDenied`.
 
 The superuser_required decorator
@@ -57,10 +57,10 @@ The superuser_required decorator
 
 .. function:: superuser_required([login_url=None, raise_exception=False])
 
-    This decorator provides a simple way to restrict access to a particular
-    view to only users who have the *is_superuser* flag set. Rather than using
+    This decorator provides a simple way of restricting access to a particular
+    view to users who have the *is_superuser* flag set. Rather than using
     the `~django.contrib.auth.decorators.user_passes_test()` decorator
-    restricting a view to staff only can be written as::
+    restricting a view to super users can be written as::
 
         from django_extras.contrib.auth.decorators import superuser_required
         @superuser_required
@@ -70,8 +70,8 @@ The superuser_required decorator
     As in the :func:`~decorators.login_required`, ``login_url`` defaults to
     :setting:`settings.LOGIN_URL <LOGIN_URL>`.
 
-    Following from the change in Django 1.4 this decorator also includes the
-    ``raise_exception`` parameter, If given, the decorator will raise
+    Mirroring the change in Django 1.4 this decorator also accepts the
+    ``raise_exception`` parameter. If given, the decorator will raise
     :exc:`~django.core.exceptions.PermissionDenied`.
 
 Ownership Mixin Models
@@ -80,26 +80,26 @@ Ownership Mixin Models
 .. currentmodule:: django_extras.contrib.auth.models
 
 Two mixin classes are provided that provide a consistent API for assigning
-ownership of a model instance to a user object.
+ownership of a model instance to a user.
 
 Example::
 
     class MyModel(SingleOwnerMixin, models.Model):
         name = models.CharField(max_length=50)
 
-Both :class:`SingleOwnerMixin` and :class:`MultipleOwnerMixin` provide the
-following methods.
-
 Many methods include `include_staff` and `include_superuser` parameters, these
 are used to treat staff and superuser users as if they are owners of the
 instance.
+
+Both :class:`SingleOwnerMixin` and :class:`MultipleOwnerMixin` provide the
+following methods.
 
 .. class:: OwnerMixinBase
 
 .. method:: OwnerMixinBase.owned_by(user, [include_staff=False, include_superuser=False])
 
     Returns a boolean value to indicate if the supplied user is a valid owner
-    of model instance.
+    of a model instance.
 
 .. method:: OwnerMixinBase.owner_list()
 
@@ -112,8 +112,8 @@ instance.
 
 .. class:: SingleOwnerMixin
 
-    This class provides a simple way to enable a single user to own a model
-    instance.
+    This class provides a simple way to assign ownership of a model instance to
+    a single user.
 
     .. attribute:: owner
 
@@ -129,8 +129,8 @@ instance.
 
 .. class:: MultipleOwnerMixin
 
-    This class provides a simple way to enable multiple users to own a model
-    instance.
+    This class provides a simple way to assign ownership of a model instance to
+    multiple users.
 
     .. attribute:: owners
 
@@ -148,17 +148,17 @@ instance.
 .. class:: OwnerMixinManager
 
     Manager class used by :class:`SingleOwnerMixin` and
-    :class:`MultipleOwnerMixin` to simplify obtaining a list of all model
-    instances owned by a particular user.
+    :class:`MultipleOwnerMixin` to obtain the instances of a model that has
+    ownership assigned to a particular user.
 
 Fetching owned instances
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. method:: OwnerMixinManager.owned_by(user, [include_staff=False, include_superuser=False])
 
-Returns a ``QuerySet`` filtered by the user or users. The user parameter can
-be either a single :class:`User` object, a sequence of :class:`User` objects or
-a single or sequence of user primary keys.
+Returns a ``QuerySet`` filtered by a user or users. The user parameter can
+be either a single :class:`User` object or primary key, a sequence of :class:`User` objects or
+primary keys.
 
 Example::
 
@@ -172,7 +172,7 @@ Example::
 
 .. note::
     It is not possible to use the `include_staff` and `include_superuser`
-    parameters along when passing a sequence for the `user` parameter. A
+    parameters when passing a sequence for the `user` parameter. A
     :class:`TypeError` exception will be raised in this case.
 
 
@@ -183,10 +183,10 @@ Shortcuts
 
 .. function:: get_owned_object_or_40x([klass, owner, include_staff=False, include_superuser=False, *args, **kwargs])
 
-A convenience method that follows on from the Django shortcut `get_object_or_404`.
-If the object cannot be loaded an :class:`Http404` exception is raised if an
-object is loaded but the owner is not valid a :class:`PermissionDenied`
-exception is raised.
+A convenience method that mirrors the Django shortcut `get_object_or_404`.
+If the object cannot be loaded a :class:`Http404` exception is raised, if a
+user cannot be verified as an owner a :class:`PermissionDenied` exception is
+raised.
 
 As with the other extensions `include_staff` and `include_superuser` flags are
 provided. `*args` and `**kwargs` work in the same way as `get_object_or_404`.

@@ -2,4 +2,10 @@
 Forms
 =====
 
-**TODO** Complete this section
+Form API reference.
+
+.. toctree::
+   :maxdepth: 1
+
+   fields
+   widgets

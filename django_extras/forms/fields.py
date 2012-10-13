@@ -1,5 +1,5 @@
 from django.forms.fields import *
-from django.forms import widgets
+from django_extras.forms import widgets
 from django_extras.core import validators
 
 
@@ -7,6 +7,8 @@ class ColorField(CharField):
     """
     Form field that provides input for color picker
     """
+    widget = widgets.JQueryColorPicker
+
     def __init__(self, allow_alpha=False, *args, **kwargs):
         super(ColorField, self).__init__(*args, **kwargs)
         self.allow_alpha = allow_alpha
