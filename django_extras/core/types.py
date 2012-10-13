@@ -1,4 +1,6 @@
+# -*- coding: UTF-8 -*-
 import decimal
+import math
 
 
 NO_CURRENCY_CODE = 'XXX'
@@ -221,3 +223,110 @@ class Money(object):
         build(str(currency_symbol))
         build(str(negative_sign if sign else positive_sign))
         return ''.join(reversed(results))
+
+
+def to_dms(value, absolute=False):
+    """ Split a float value into DMS (degree, minute, second) parts
+    value - Float value to split
+    absolute - Obtain the absolute value
+    return tupple containing DMS values
+    """
+    invert = not absolute and value < 0
+    value = abs(value)
+    degree = int(math.floor(value))
+    value = (value - degree) * 60
+    minute = int(math.floor(value))
+    second = (value - minute) * 60
+    if invert: return (-degree, minute, second)
+    else: return (degree, minute, second)
+
+
+def to_dm(value, absolute=False):
+    """ Split a float value into DM (degree, minute) parts
+    value - Float value to split
+    absolute - Obtain the absolute value
+    return tupple containing DM values
+    """
+    invert = not absolute and value < 0
+    value = abs(value)
+    degree = int(math.floor(value))
+    minute = (value - degree) * 60
+    if invert: return (-degree, minute)
+    else: return (degree, minute)
+
+
+class latitude(float):
+    """ Latitude value """
+
+    __slots__ = []
+
+    def __new__(cls, value=None):
+        if value is None:
+            return float.__new__(cls, 0.0)
+        if isinstance(value, float):
+            if value <= 90.0 and value >= -90.0:
+                return float.__new__(cls, value)
+            raise ValueError("Value %d out of range(-90.0, 90.0)" % value)
+        raise ValueError("Expected type float or latitude")
+
+    def __repr__(self):
+        return "%02.3f" % self
+
+    def __str__(self):
+        result = "%02i°%02i'%02f\"" % to_dms(self, True)
+        if self < 0: return result + 'S'
+        else: return result + 'N'
+
+
+class longitude(float):
+    """ Longitude value """
+
+    __slots__ = []
+
+    def __new__(cls, value=None):
+        if value is None:
+            return float.__new__(cls, 0.0)
+        if isinstance(value, float):
+            if value <= 180.0 and value >= -180.0:
+                return float.__new__(cls, value)
+            raise ValueError("Value %d out of range(-180.0, 180.0)" % value)
+        raise ValueError("Expected type float or longitude")
+
+    def __repr__(self):
+        return "%03.3f" % self
+
+    def __str__(self):
+        result = "%03i°%02i\'%02f\"" % to_dms(self, True)
+        if self < 0: return result + 'W'
+        else: return result + 'E'
+
+
+class latlng(object):
+    """ Latitude/Longitude pair """
+
+    __slots__ = ['lat', 'lng'] # Define available parameters
+
+    def __init__(self, value):
+        if isinstance(value, tuple) and len(value) == 2:
+            (lat, lng) = value
+            self.lat = latitude(lat)
+            self.lng = longitude(lng)
+        elif isinstance(value, latlng):
+            self.lat = latitude(value.lat)
+            self.lng = longitude(value.lng)
+        else:
+            raise ValueError
+
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__): raise TypeError
+        return self.lat == other.lat and self.lng == other.lng
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __str__(self):
+        return "Latitude %s; Longitude %s" % (str(self.lat), str(self.lng))
+
+    def get_value(self):
+        """ Returns tuple lat/lng pair """
+        return (self.lat, self.lng)

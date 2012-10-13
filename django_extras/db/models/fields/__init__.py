@@ -68,7 +68,7 @@ class PercentField(models.FloatField):
     default_validators = [
         MinValueValidator(0),
         MaxValueValidator(100),
-        ]
+    ]
 
 
 class LatitudeField(models.FloatField):
@@ -80,7 +80,7 @@ class LatitudeField(models.FloatField):
         kwargs.setdefault('validators', [
             validators.MinValueValidator(-90.0),
             validators.MaxValueValidator(90.0),
-            ])
+        ])
         super(LatitudeField, self).__init__(*args, **kwargs)
 
 
@@ -93,7 +93,7 @@ class LongitudeField(models.FloatField):
         kwargs.setdefault('validators', [
             validators.MinValueValidator(-180.0),
             validators.MaxValueValidator(180.0),
-            ])
+        ])
         super(LongitudeField, self).__init__(*args, **kwargs)
 
 # Register special admin widgets if admin is in use.

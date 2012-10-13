@@ -1,6 +1,6 @@
 #coding=UTF-8
 from django import test
-from django_extras.core.types import Money
+from django_extras.core.types import Money, latitude, longitude
 
 
 #TODO: Add more tests to get complete coverage
@@ -37,3 +37,44 @@ class MoneyTestCase(test.TestCase):
         self.assertEqual('123,456.79', self.FORMAT_POSITIVE.format(trailing_negative=" neg"))
         self.assertEqual('-12,345.68 neg', self.FORMAT_NEGATIVE.format(trailing_negative=" neg"))
 
+
+class LatitudeTestCase(test.TestCase):
+    def testEmpty(self):
+        self.failUnlessEqual(latitude(), 0.0)
+
+    def testOutOfRange(self):
+        self.failUnlessRaises(ValueError, latitude, 91.0)
+        self.failUnlessRaises(ValueError, latitude, -91.0)
+
+    def testInvalidType(self):
+        self.failUnlessRaises(ValueError, latitude, 91)
+        self.failUnlessRaises(ValueError, latitude, "91")
+
+    def testStrPositive(self):
+        l = latitude(27 + 27.9487 / 60)
+        self.failUnlessEqual(str(l), "27°27'56.922000\"N")
+
+    def testStrNegative(self):
+        l = latitude(-(27 + 27.9487 / 60))
+        self.failUnlessEqual(str(l), "27°27'56.922000\"S")
+
+
+class LongitudeTestCase(test.TestCase):
+    def testEmpty(self):
+        self.failUnlessEqual(longitude(), 0.0)
+
+    def testOutOfRange(self):
+        self.failUnlessRaises(ValueError, longitude, 191.0)
+        self.failUnlessRaises(ValueError, longitude, -191.0)
+
+    def testInvalidType(self):
+        self.failUnlessRaises(ValueError, longitude, 91)
+        self.failUnlessRaises(ValueError, longitude, "91")
+
+    def testStrPositive(self):
+        l = longitude(153 + 05.3408 / 60)
+        self.failUnlessEqual(str(l), "153°05'20.448000\"E")
+
+    def testStrNegative(self):
+        l = longitude(-(153 + 05.3408 / 60))
+        self.failUnlessEqual(str(l), "153°05'20.448000\"W")
