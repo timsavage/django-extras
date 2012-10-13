@@ -226,10 +226,12 @@ class Money(object):
 
 
 def to_dms(value, absolute=False):
-    """ Split a float value into DMS (degree, minute, second) parts
-    value - Float value to split
-    absolute - Obtain the absolute value
-    return tupple containing DMS values
+    """
+    Split a float value into DMS (degree, minute, second) parts
+
+    :param value - Float value to split
+    :param absolute - Obtain the absolute value
+    :return tuple containing DMS values
     """
     invert = not absolute and value < 0
     value = abs(value)
@@ -237,34 +239,38 @@ def to_dms(value, absolute=False):
     value = (value - degree) * 60
     minute = int(math.floor(value))
     second = (value - minute) * 60
-    if invert: return (-degree, minute, second)
-    else: return (degree, minute, second)
+    return (
+        degree * -1 if invert else degree,
+        minute,
+        second
+    )
 
 
 def to_dm(value, absolute=False):
-    """ Split a float value into DM (degree, minute) parts
-    value - Float value to split
-    absolute - Obtain the absolute value
-    return tupple containing DM values
+    """
+    Split a float value into DM (degree, minute) parts
+
+    :param value - Float value to split
+    :param absolute - Obtain the absolute value
+    :return tuple containing DM values
     """
     invert = not absolute and value < 0
     value = abs(value)
     degree = int(math.floor(value))
     minute = (value - degree) * 60
-    if invert: return (-degree, minute)
-    else: return (degree, minute)
+    return (
+        degree * -1 if invert else degree,
+        minute
+    )
 
 
 class latitude(float):
     """ Latitude value """
-
-    __slots__ = []
-
     def __new__(cls, value=None):
         if value is None:
             return float.__new__(cls, 0.0)
         if isinstance(value, float):
-            if value <= 90.0 and value >= -90.0:
+            if 90.0 >= value >= -90.0:
                 return float.__new__(cls, value)
             raise ValueError("Value %d out of range(-90.0, 90.0)" % value)
         raise ValueError("Expected type float or latitude")
@@ -280,14 +286,11 @@ class latitude(float):
 
 class longitude(float):
     """ Longitude value """
-
-    __slots__ = []
-
     def __new__(cls, value=None):
         if value is None:
             return float.__new__(cls, 0.0)
         if isinstance(value, float):
-            if value <= 180.0 and value >= -180.0:
+            if 180.0 >= value >= -180.0:
                 return float.__new__(cls, value)
             raise ValueError("Value %d out of range(-180.0, 180.0)" % value)
         raise ValueError("Expected type float or longitude")
