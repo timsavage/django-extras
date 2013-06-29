@@ -51,6 +51,6 @@ Other batteries included
 Source code
 ===========
 
-Full `source code`_ is available in Bit Bucket.
+Full `source code`_ is available on Git Hub. Have migrated away from BitBucket for Travis CI support.
 
-.. _source code: https://bitbucket.org/timsavage/django-extras/src
+.. _source code: https://github.com/timsavage/django-extras
