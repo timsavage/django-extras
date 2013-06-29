@@ -1,0 +1,5 @@
+language: python
+python:
+  - "2.7"
+install: "pip install -r test_harness/requirements.txt --use-mirrors"
+script: python -mtest_harness.runner
