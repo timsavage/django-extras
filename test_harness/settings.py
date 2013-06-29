@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+DEBUG = True
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -25,4 +27,6 @@ INSTALLED_APPS = (
     'django_extras',
 )
 
-ROOT_URLCONF = ''
+ROOT_URLCONF = 'test_harness.urls'
+
+LOGIN_URL = '/login/'
