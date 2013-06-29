@@ -1,3 +1,4 @@
+#from django.conf import settings
 from django.core import exceptions
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
@@ -100,10 +101,12 @@ class LongitudeField(models.FloatField):
         ])
         super(LongitudeField, self).__init__(*args, **kwargs)
 
+
 # Register special admin widgets if admin is in use.
 #if 'django.contrib.admin' in settings.INSTALLED_APPS:
 #    from django.contrib.admin import options
-#    options.FORMFIELD_FOR_DBFIELD_DEFAULTS[ColorField] = { 'widget':  }
+#    from django_extras.forms.widgets import JQueryColorPicker
+#    options.FORMFIELD_FOR_DBFIELD_DEFAULTS[ColorField] = { 'widget': JQueryColorPicker }
 
 # Register fields with south.
 try:

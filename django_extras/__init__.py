@@ -1,4 +1,4 @@
-VERSION = (0, 2, 5, 'beta', 1)
+VERSION = (0, 2, 6, 'beta', 2)
 
 def get_version():
     # Don't litter django_extras/__init__.py with all the get_version stuff.
