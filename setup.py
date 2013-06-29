@@ -45,13 +45,13 @@ version = __import__('django_extras').get_version()
 setup(
     name = "django-extras",
     version = version,
-    url = "https://bitbucket.org/timsavage/django-extras",
+    url = "https://github.com/timsavage/django-extras",
     author = "Tim Savage",
     author_email = "tim.savage@poweredbypenguins.org",
     description = "A selection of extras for the Django Web framework.",
     packages = packages,
     data_files = data_files,
-    requires = ['django'],
+    install_requires = ['django'],
     classifiers = [
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
