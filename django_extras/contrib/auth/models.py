@@ -1,6 +1,19 @@
 # -*- encoding:utf8 -*-
-from django.contrib.auth.models import *
+#from django.contrib.auth.models import *
 from django.db import models
+from django.conf import settings
+
+
+# Compatibility with django 1.5 custom user models
+USER_MODEL_NAME = getattr(settings, "AUTH_USER_MODEL", 'auth.User')
+
+try:
+    from django.contrib.auth import get_user_model
+except ImportError:
+    from django.contrib.auth.models import User
+
+    def get_user_model():
+        return User
 
 
 class OwnerMixinManager(models.Manager):
@@ -12,15 +25,17 @@ class OwnerMixinManager(models.Manager):
         self.__owner_filter = owner_filter
 
     def _owned_by_multi(self, users):
-        user_pks = [u.pk if isinstance(u, User) else u for u in users]
+        UserModel = get_user_model()
+        user_pks = [u.pk if isinstance(u, UserModel) else u for u in users]
         filter = {self.__owner_filter + '__in': user_pks}
         return self.filter(**filter).distinct()
 
     def _owned_by_single(self, user, include_staff, include_superuser):
-        user_pk, user = (user.pk, user) if isinstance(user, User) else (user, None)
+        UserModel = get_user_model()
+        user_pk, user = (user.pk, user) if isinstance(user, UserModel) else (user, None)
         if include_staff or include_superuser:
             if not user:
-                user = User.objects.only('is_staff', 'is_superuser').get(pk=user_pk)
+                user = UserModel.objects.only('is_staff', 'is_superuser').get(pk=user_pk)
             if (include_staff and user.is_staff) or (include_superuser and user.is_superuser):
                 return self.all()
         filter = {self.__owner_filter: user_pk}
@@ -80,11 +95,12 @@ class OwnerMixinBase(models.Model):
         :include_superuser: any user who has the ``is_superuser`` flag is included as an owner.
         :return: True if user has access; else False.
         """
+        UserModel = get_user_model()
         # Only touch elements that could cause a database operation if actually needed.
-        user_pk, user = (user.pk, user) if isinstance(user, User) else (user, None)
+        user_pk, user = (user.pk, user) if isinstance(user, UserModel) else (user, None)
         if include_staff or include_superuser:
             if not user:
-                user = User.objects.only('is_staff', 'is_superuser').get(pk=user_pk)
+                user = UserModel.objects.only('is_staff', 'is_superuser').get(pk=user_pk)
             if (include_staff and user.is_staff) or (include_superuser and user.is_superuser):
                 return True
         return user_pk in self.get_owner_pks()
@@ -108,7 +124,7 @@ class SingleOwnerMixin(OwnerMixinBase):
             content = models.TextField()
 
     """
-    owner = models.ForeignKey(User, related_name='%(app_label)s_%(class)s_owner')
+    owner = models.ForeignKey(USER_MODEL_NAME, related_name='%(app_label)s_%(class)s_owner')
 
     objects = OwnerMixinManager('owner')
 
@@ -152,7 +168,7 @@ class MultipleOwnerMixin(OwnerMixinBase):
             can_edit = models.BooleanField()
 
     """
-    owners = models.ManyToManyField(User, related_name='%(app_label)s_%(class)s_owners')
+    owners = models.ManyToManyField(USER_MODEL_NAME, related_name='%(app_label)s_%(class)s_owners')
 
     objects = OwnerMixinManager('owners')
 

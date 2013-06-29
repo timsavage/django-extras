@@ -9,7 +9,7 @@ covered by the core Django framework.
 * `Issue tracker`_
 * `Source code`_
 
-.. _source code: https://bitbucket.org/timsavage/django-extras/src
+.. _source code: https://github.com/timsavage/django-extras
 .. _documentation: http://django-extras.readthedocs.org
 .. _issue tracker: https://bitbucket.org/timsavage/django-extras/issues
 
