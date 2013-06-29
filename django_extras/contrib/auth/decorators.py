@@ -12,7 +12,7 @@ def superuser_required(function=None, login_url=None, raise_exception=False):
         if user.is_superuser:
             return True
         if raise_exception:
-            raise PermissionDenied
+            raise PermissionDenied()
         return False
     actual_decorator = user_passes_test(check_permission, login_url=login_url)
     if function:
@@ -30,7 +30,7 @@ def staff_required(function=None, include_superusers=True, login_url=None,
         if user.is_staff or (include_superusers and user.is_superuser):
             return True
         if raise_exception:
-            raise PermissionDenied
+            raise PermissionDenied()
         return False
     actual_decorator = user_passes_test(check_permission, login_url=login_url)
     if function:
