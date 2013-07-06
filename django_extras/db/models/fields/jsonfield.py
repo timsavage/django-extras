@@ -1,8 +1,7 @@
-from decimal import Decimal
+import json
 from django.core.serializers.json import DjangoJSONEncoder
 from django.conf import settings
 from django.db import models
-from django.utils import simplejson
 from django_extras import forms
 
 
@@ -11,11 +10,7 @@ def dumps(value):
 
 
 def loads(txt):
-    value = simplejson.loads(
-        txt,
-        parse_float=Decimal,
-        encoding=settings.DEFAULT_CHARSET
-    )
+    value = json.loads(txt, encoding=settings.DEFAULT_CHARSET)
     return value
 
 
@@ -66,8 +61,7 @@ class JsonField(models.TextField):
         if not isinstance(value, (list, dict)):
             return super(JsonField, self).get_db_prep_save("", connection=connection)
         else:
-            return super(JsonField, self).get_db_prep_save(dumps(value),
-                connection=connection)
+            return super(JsonField, self).get_db_prep_save(dumps(value), connection=connection)
 
     def formfield(self, **kwargs):
         defaults = {'form_class': forms.JsonField}
