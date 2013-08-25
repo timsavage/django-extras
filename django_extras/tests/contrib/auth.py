@@ -265,6 +265,12 @@ class SingleOwnerTestCase(test.TransactionTestCase):
         actual = SingleOwner.objects.get(pk=2).owner_list()
         self.assertListEqual([self.user2], actual)
 
+    def test_get_related_owner(self):
+        # This is a test case for
+        actual = SingleOwner.objects.get(pk=1)
+        owner = actual.owner
+        self.assertEqual(self.user1, owner)
+
 
 class MultiOwnerTestTestCase(test.TransactionTestCase):
     fixtures = ['owners.json']
@@ -293,3 +299,8 @@ class MultiOwnerTestTestCase(test.TransactionTestCase):
 
         actual = MultiOwner.objects.get(pk=2).owner_list()
         self.assertListEqual([self.user1, self.user2], actual)
+
+    def test_get_related_owners(self):
+        actual = MultiOwner.objects.get(pk=1)
+        owners = list(actual.owners.all())
+        self.assertEqual([self.user1], owners)
