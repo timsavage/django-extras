@@ -26,8 +26,8 @@ class OwnerMixinManager(models.Manager):
     def _owned_by_multi(self, users):
         UserModel = get_user_model()
         user_pks = [u.pk if isinstance(u, UserModel) else u for u in users]
-        filter = {self.__owner_filter + '__in': user_pks}
-        return self.filter(**filter).distinct()
+        filter_ = {self.__owner_filter + '__in': user_pks}
+        return self.filter(**filter_).distinct()
 
     def _owned_by_single(self, user, include_staff, include_superuser):
         UserModel = get_user_model()
@@ -37,8 +37,8 @@ class OwnerMixinManager(models.Manager):
                 user = UserModel.objects.only('is_staff', 'is_superuser').get(pk=user_pk)
             if (include_staff and user.is_staff) or (include_superuser and user.is_superuser):
                 return self.all()
-        filter = {self.__owner_filter: user_pk}
-        return self.filter(**filter)
+        filter_ = {self.__owner_filter: user_pk}
+        return self.filter(**filter_)
 
     def owned_by(self, user, include_staff=False, include_superuser=False):
         """
@@ -111,6 +111,12 @@ class OwnerMixinBase(models.Model):
         return not self.is_owned_by(user, include_staff, include_superuser)
 
 
+
+class SingleOwnerMixinManager(OwnerMixinManager):
+    def __init__(self, owner_filter='owner'):
+        super(SingleOwnerMixinManager, self).__init__(owner_filter)
+
+
 class SingleOwnerMixin(OwnerMixinBase):
     """
     Model mixin that provides a model instance with a single owner.
@@ -125,7 +131,7 @@ class SingleOwnerMixin(OwnerMixinBase):
     """
     owner = models.ForeignKey(USER_MODEL_NAME, related_name='%(app_label)s_%(class)s_owner')
 
-    objects = OwnerMixinManager('owner')
+    objects = SingleOwnerMixinManager()
 
     class Meta:
         abstract = True
@@ -140,6 +146,11 @@ class SingleOwnerMixin(OwnerMixinBase):
 
     def get_owner_pks(self):
         return [self.owner_id]
+
+
+class MultipleOwnerMixinManager(OwnerMixinManager):
+    def __init__(self, owner_filter='owners'):
+        super(MultipleOwnerMixinManager, self).__init__(owner_filter)
 
 
 class MultipleOwnerMixin(OwnerMixinBase):
@@ -169,7 +180,7 @@ class MultipleOwnerMixin(OwnerMixinBase):
     """
     owners = models.ManyToManyField(USER_MODEL_NAME, related_name='%(app_label)s_%(class)s_owners')
 
-    objects = OwnerMixinManager('owners')
+    objects = MultipleOwnerMixinManager()
 
     class Meta:
         abstract = True
