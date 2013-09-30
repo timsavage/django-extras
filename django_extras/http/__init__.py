@@ -1,6 +1,4 @@
 import os.path
-from django.core.serializers import json
-from django.utils import simplejson
 from django.http import *
 from email.utils import formatdate as format_http_date
 
@@ -115,6 +113,11 @@ class JsonResponse(HttpResponse):
     Response object that handles JSON encoding and sets the correct content type.
     """
     def __init__(self, data, content_type='application/json', **kwargs):
-        super(JsonResponse, self).__init__(
-            simplejson.dumps(data, cls=json.DjangoJSONEncoder),
-            content_type=content_type, **kwargs)
+        try:
+            import json
+        except ImportError:
+           from django.utils import simplejson as json
+        from django.core.serializers.json import DjangoJSONEncoder
+
+        super(JsonResponse, self).__init__(json.dumps(data, cls=DjangoJSONEncoder),
+                                           content_type=content_type, **kwargs)
