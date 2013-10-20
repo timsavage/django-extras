@@ -72,6 +72,6 @@ class JsonField(models.TextField):
 # Register field with south.
 try:
     from south.modelsinspector import add_introspection_rules
-    add_introspection_rules([], ["^django_extras\.db\.models\.fields\.json\.JsonField"])
+    add_introspection_rules([], ["^django_extras\.db\.models\.fields\.jsonfield\.JsonField"])
 except ImportError:
     pass
