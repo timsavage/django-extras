@@ -1,6 +1,38 @@
 #coding=UTF-8
+from decimal import Decimal
 from django import test
-from django_extras.core.types import Money, latitude, longitude
+from django_extras.core.types import Currency, Money, latitude, longitude, decimal_value
+
+
+class ToDecimalTestCase(test.TestCase):
+    def test_value_values(self):
+        self.assertEqual(decimal_value(12), Decimal('12'))
+        self.assertEqual(decimal_value(12.3), Decimal('12.3'))
+        self.assertEqual(decimal_value('12'), Decimal('12'))
+
+    def test_value_is_none(self):
+        with self.assertRaises(ValueError):
+            decimal_value(None)
+
+    def test_empty_value(self):
+        with self.assertRaises(ValueError):
+            decimal_value('')
+
+        with self.assertRaises(ValueError):
+            decimal_value([])
+
+        with self.assertRaises(ValueError):
+            decimal_value(())
+
+        with self.assertRaises(ValueError):
+            decimal_value({})
+
+    def test_decimal_value(self):
+        in_value = Decimal('12')
+        out_value = decimal_value(in_value)
+
+        self.assertEqual(in_value, out_value)
+        self.assertIs(in_value, out_value)
 
 
 #TODO: Add more tests to get complete coverage
@@ -12,6 +44,9 @@ class MoneyTestCase(test.TestCase):
 
     FORMAT_POSITIVE = Money('123456.789')
     FORMAT_NEGATIVE = Money('-12345.6789')
+
+    AUD = Currency('AUD', 36, "Australian Dollar", '$')
+    NZD = Currency('NZD', 554, "New Zealand Dollar", '$')
 
     def test_format_default(self):
         self.assertEqual('123,456.79', self.FORMAT_POSITIVE.format())
@@ -36,6 +71,23 @@ class MoneyTestCase(test.TestCase):
     def test_format_trailing_negative(self):
         self.assertEqual('123,456.79', self.FORMAT_POSITIVE.format(trailing_negative=" neg"))
         self.assertEqual('-12,345.68 neg', self.FORMAT_NEGATIVE.format(trailing_negative=" neg"))
+
+    # Tests from issue #1
+    def test_equal_equal_values(self):
+        self.assertTrue(self.SMALL == '100.0')
+        self.assertTrue(self.SMALL == '100')
+        self.assertTrue(self.SMALL == 100.0)
+        self.assertTrue(Money('123.4567') == Money('123.4567'))
+        self.assertTrue(Money('123.4567', self.AUD) == Money('123.4567', self.AUD))
+
+    def test_equal_not_equal_values(self):
+        self.assertFalse(self.SMALL == 99)
+        self.assertFalse(self.SMALL == '99.9')
+        self.assertFalse(self.SMALL == None)
+        self.assertFalse(self.SMALL == '')
+        self.assertFalse(self.SMALL == [])
+        self.assertFalse(Money('123.4567') == Money('765.4321'))
+        self.assertFalse(Money('123.4567', self.AUD) == Money('123.4567', self.NZD))
 
 
 class LatitudeTestCase(test.TestCase):

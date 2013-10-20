@@ -8,15 +8,19 @@ NO_CURRENCY_NUMBER = 999
 
 class Currency(object):
     """
-    Represents a currency.
-    """
-    __slots__ = ('code', 'number', 'name', 'symbol', )
+    Definition of a currency.
 
-    def __init__(self, code, number, name, symbol=''):
+    This object uses values from the ISO_4217 list of currency names, codes.
+    See http://en.wikipedia.org/wiki/ISO_4217
+    """
+    __slots__ = ('code', 'number', 'name', 'symbol', 'decimal_digits')
+
+    def __init__(self, code, number, name, symbol='', decimal_digits=2):
         self.code = code
         self.number = number
         self.name = name
         self.symbol = symbol
+        self.decimal_digits = decimal_digits
 
     # Comparison operators
     def __eq__(self, other):
@@ -109,7 +113,7 @@ class Money(object):
         >>> 10 % money.Money(500)
         50.0000
         """
-        if self._can_compare(other):
+        if isinstance(other, Money):
             raise TypeError, 'Can not use a monetary quantity as a percentage.'
         else:
             #noinspection PyTypeChecker
@@ -126,11 +130,15 @@ class Money(object):
 
     # Comparison operators
     def __eq__(self, other):
-        if other is None:
-            return False
         if isinstance(other, Money):
-            return self.currency == other.currency and self._amount == other._amount
-        return self._amount == decimal.Decimal(str(other))
+            if self.currency != other.currency:
+                return False
+            return self._amount == other._amount
+        # For non Money types assume the that the amount is being compared.
+        try:
+            return self._amount == decimal_value(other)
+        except ValueError:
+            return False
 
     def __ne__(self, other):
         return not self.__eq__(other)
