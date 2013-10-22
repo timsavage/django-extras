@@ -40,6 +40,8 @@ class ColorField(models.CharField):
 class MoneyField(models.DecimalField):
     """
     Database field that represents a Money amount.
+
+    This field should really also store the currency.
     """
     default_error_messages = {
         'invalid': _(u'This value must be a monetary amount.'),
@@ -54,6 +56,8 @@ class MoneyField(models.DecimalField):
     def to_python(self, value):
         if value is None:
             return value
+        if isinstance(value, Money):
+            return value
         try:
             return Money(value)
         except ValueError:
@@ -63,7 +67,7 @@ class MoneyField(models.DecimalField):
         value = self.to_python(value)
         if value is not None:
             value = value._amount
-        super(MoneyField, self).get_db_prep_save(value, connection)
+        return connection.ops.value_to_db_decimal(value, self.max_digits, self.decimal_places)
 
 
 class PercentField(models.FloatField):
