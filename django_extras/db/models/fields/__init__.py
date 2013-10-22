@@ -37,15 +37,14 @@ class ColorField(models.CharField):
         return super(ColorField, self).formfield(**defaults)
 
 
+# TODO: This field should really also store the currency.
 class MoneyField(models.DecimalField):
     """
     Database field that represents a Money amount.
-
-    This field should really also store the currency.
     """
     default_error_messages = {
         'invalid': _(u'This value must be a monetary amount.'),
-        }
+    }
     description = _("Monetary amount")
 
     def __init__(self, *args, **kwargs):
