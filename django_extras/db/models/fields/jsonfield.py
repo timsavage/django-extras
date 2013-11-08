@@ -1,4 +1,7 @@
-import json
+try:
+    from django.utils import simplejson as json
+except ImportError:
+    import json
 from django.core.serializers.json import DjangoJSONEncoder
 from django.conf import settings
 from django.db import models

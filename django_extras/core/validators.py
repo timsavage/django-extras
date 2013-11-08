@@ -1,7 +1,10 @@
 import re
 from django.core.validators import *
 from django.utils.translation import ugettext_lazy as _
-from django.utils import simplejson
+try:
+    from django.utils import simplejson as json
+except ImportError:
+    import json
 
 
 color_re = re.compile(
@@ -36,7 +39,7 @@ class JsonValidator(object):
         Validates that the input is valid JSON.
         """
         try:
-            simplejson.loads(value, **self.load_options)
+            json.loads(value, **self.load_options)
         except ValueError:
             raise ValidationError(self.message, code=self.code)
 
