@@ -1,3 +1,4 @@
+import six
 import os.path
 from django.http import *
 from email.utils import formatdate as format_http_date
@@ -97,8 +98,8 @@ class FileResponse(HttpResponse):
     Response object that handles files
     """
     def __init__(self, content, content_type, include_last_modified=True):
-        if isinstance(content, basestring):
-            f = file(content, 'rb')
+        if isinstance(content, six.string_types):
+            f = open(content, 'rb')
         else:
             f = content
         super(FileResponse, self).__init__(f, content_type=content_type)

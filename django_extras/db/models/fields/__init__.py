@@ -1,4 +1,4 @@
-#from django.conf import settings
+import six
 from django.core import exceptions
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
@@ -15,7 +15,7 @@ class ColorField(models.CharField):
     Database field that represents a color value.
     """
     default_error_messages = {
-        'invalid': _(u'This value must be a CSS colour value.'),
+        'invalid': _(six.u('This value must be a CSS colour value.')),
     }
     description = _("Color value")
 
@@ -43,7 +43,7 @@ class MoneyField(models.DecimalField):
     Database field that represents a Money amount.
     """
     default_error_messages = {
-        'invalid': _(u'This value must be a monetary amount.'),
+        'invalid': _(six.u('This value must be a monetary amount.')),
     }
     description = _("Monetary amount")
 

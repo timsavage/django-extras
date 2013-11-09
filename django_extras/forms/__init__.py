@@ -1,1 +1,1 @@
-from fields import *
+from django_extras.forms.fields import *

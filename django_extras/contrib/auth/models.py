@@ -86,7 +86,7 @@ class OwnerMixinBase(models.Model):
 
     def is_owned_by(self, user, include_staff=False, include_superuser=False):
         """
-        Is this particular model owned by a particular user.
+        Is this particular user have ownership over this model.
 
         :user: the user object to check; this can be a ``django.contrib.auth.models.User`` instance
             or a primary key. Recommendation is to pass request.user

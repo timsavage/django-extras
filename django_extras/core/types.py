@@ -96,13 +96,13 @@ class Money(object):
 
     def __mul__(self, other):
         if self._can_compare(other):
-            raise TypeError, 'Can not multiply by a monetary quantity.'
+            raise TypeError('Can not multiply by a monetary quantity.')
         else:
             return Money(amount = self._amount * decimal_value(other))
 
     def __div__(self, other):
         if self._can_compare(other):
-            raise TypeError, 'Can not divide by a monetary quantity.'
+            raise TypeError('Can not divide by a monetary quantity.')
         else:
             return Money(amount = self._amount * decimal_value(other))
 
@@ -114,7 +114,7 @@ class Money(object):
         50.0000
         """
         if isinstance(other, Money):
-            raise TypeError, 'Can not use a monetary quantity as a percentage.'
+            raise TypeError('Can not use a monetary quantity as a percentage.')
         else:
             #noinspection PyTypeChecker
             percentage = decimal_value(other) * self._amount / 100

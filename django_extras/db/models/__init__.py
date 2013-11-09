@@ -1,3 +1,3 @@
 from django.db.models import *
-from choices import *
-from fields import *
+from django_extras.db.models.choices import *
+from django_extras.db.models.fields import *

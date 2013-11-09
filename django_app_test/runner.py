@@ -69,6 +69,7 @@ def main():
             "django.contrib.sites",
             app_name,
         ),
+        "TEST_RUNNER": "django.test.simple.DjangoTestSuiteRunner"
     })
     call_command("test", app_name)
 

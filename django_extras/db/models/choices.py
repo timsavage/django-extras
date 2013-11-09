@@ -54,10 +54,10 @@ class ChoiceEnum(object):
 
         self.__default = NOT_PROVIDED
         self.__max_length = 0
-        self.__value_map = dict()
+        self.__value_map = {}
         self.__choices = OrderedDict()
 
-        map(self.__parse_entry, entries.iteritems())
+        map(self.__parse_entry, iter(entries.items()))
 
     def __parse_entry(self, entry):
         key, value = entry

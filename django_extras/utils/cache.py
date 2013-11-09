@@ -21,7 +21,7 @@ def generate_key(instance_or_type, *args, **kwargs):
     """
     field_names = [f.name for f in instance_or_type._meta.fields]
     field_names.append('pk')
-    for field in kwargs.iterkeys():
+    for field in kwargs.keys():
         if field not in field_names:
             raise AttributeError('Model "%s" has no field "%s".' % (
                 instance_or_type._meta.module_name, field))

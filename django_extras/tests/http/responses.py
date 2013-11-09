@@ -7,7 +7,7 @@ from django_extras.http import FileResponse, JsonResponse
 class FileResponseTestCase(test.TestCase):
     def test_with_file_handle(self):
         path = os.path.dirname(__file__)
-        f = file(os.path.join(path, 'data/example.txt'))
+        f = open(os.path.join(path, 'data/example.txt'))
         target = FileResponse(f, 'test/plain')
 
         self.assertEqual(target['Content-Type'], 'test/plain')
