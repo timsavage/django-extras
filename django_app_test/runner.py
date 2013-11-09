@@ -19,12 +19,10 @@ def main():
     script basically will bootstrap a Django environment for you.
 
     By default this script with use SQLite and an in-memory database. If you
-    are using Python 2.5 it will just work out of the box for you.
-
-    TODO: show more options here.
+    are using Python 2.6 it will just work out of the box for you.
     """
     parser = OptionParser()
-    parser.add_option("--DATABASE_ENGINE", dest="DATABASE_ENGINE", default="sqlite3")
+    parser.add_option("--DATABASE_ENGINE", dest="DATABASE_ENGINE", default="django.db.backends.sqlite3")
     parser.add_option("--DATABASE_NAME", dest="DATABASE_NAME", default="")
     parser.add_option("--DATABASE_USER", dest="DATABASE_USER", default="")
     parser.add_option("--DATABASE_PASSWORD", dest="DATABASE_PASSWORD", default="")
@@ -47,12 +45,12 @@ def main():
     settings.configure(**{
         "DATABASES": {
             'default': {
-                'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-                'NAME': ':memory:',                      # Or path to database file if using sqlite3.
-                'USER': '',                      # Not used with sqlite3.
-                'PASSWORD': '',                  # Not used with sqlite3.
-                'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-                'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+                'ENGINE': options.DATABASE_ENGINE,
+                'NAME': options.DATABASE_NAME, #':memory:',
+                'USER': options.DATABASE_USER,
+                'PASSWORD': options.DATABASE_PASSWORD,
+                'HOST': '',
+                'PORT': '',
             }
         },
         "SITE_ID": options.SITE_ID,
@@ -69,6 +67,8 @@ def main():
             "django.contrib.sites",
             app_name,
         ),
+
+        # Force test runner to be the pre django 1.6 test runner. This tool does not work with then new default in 1.6.
         "TEST_RUNNER": "django.test.simple.DjangoTestSuiteRunner"
     })
     call_command("test", app_name)
