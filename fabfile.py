@@ -2,4 +2,4 @@
 from fabric.api import *
 
 def run_tests():
-    local('python -mtest_harness.runner')
+    local('python -mdjango_app_test.runner django_extras')

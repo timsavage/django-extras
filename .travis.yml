@@ -6,4 +6,4 @@ python:
   - "2.7"
 install:
   - pip install -q $DJANGO_PACKAGE
-script: python -mtest_harness.runner
+script: python -mdjango_app_test.runner django_extras
