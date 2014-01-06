@@ -17,7 +17,7 @@ install:
   - pip install -q $DJANGO_PACKAGE six --use-mirrors
   - pip install coveralls --use-mirrors
 
-script: python -mdjango_app_test.runner django_extras
+script: coverage run django_app_test/runner.py django_extras
 
 after_success:
   - coveralls
