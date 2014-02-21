@@ -1,7 +1,7 @@
 # -*- encoding:utf8 -*-
 from django.db import models
 from django.conf import settings
-
+from django.utils.translation import ugettext_lazy as _
 
 # Compatibility with django 1.5 custom user models
 USER_MODEL_NAME = getattr(settings, "AUTH_USER_MODEL", 'auth.User')
@@ -128,7 +128,7 @@ class SingleOwnerMixin(OwnerMixinBase):
             content = models.TextField()
 
     """
-    owner = models.ForeignKey(USER_MODEL_NAME, related_name='%(app_label)s_%(class)s_owner')
+    owner = models.ForeignKey(USER_MODEL_NAME, _('owner'), related_name='%(app_label)s_%(class)s_owner')
 
     objects = SingleOwnerMixinManager()
 
@@ -177,7 +177,7 @@ class MultipleOwnerMixin(OwnerMixinBase):
             can_edit = models.BooleanField()
 
     """
-    owners = models.ManyToManyField(USER_MODEL_NAME, related_name='%(app_label)s_%(class)s_owners')
+    owners = models.ManyToManyField(USER_MODEL_NAME, _('owners'), related_name='%(app_label)s_%(class)s_owners')
 
     objects = MultipleOwnerMixinManager()
 
