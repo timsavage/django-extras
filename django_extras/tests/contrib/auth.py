@@ -121,7 +121,7 @@ class MultiOwner(MultipleOwnerMixin, models.Model):
 
 
 class OwnerMixinManagerTestCase(test.TransactionTestCase):
-    fixtures = ['owners.json']
+    fixtures = ['tests']
 
     def setUp(self):
         self.user1 = User.objects.get(pk=1)
@@ -186,7 +186,7 @@ class OwnerMixinManagerTestCase(test.TransactionTestCase):
 
 
 class OwnerMixinBaseTestCase(test.TransactionTestCase):
-    fixtures = ['owners.json']
+    fixtures = ['tests']
 
     def setUp(self):
         self.user1 = User.objects.get(pk=1)
@@ -238,7 +238,7 @@ class OwnerMixinBaseTestCase(test.TransactionTestCase):
 
 
 class SingleOwnerTestCase(test.TransactionTestCase):
-    fixtures = ['owners.json']
+    fixtures = ['tests']
 
     def setUp(self):
         self.user1 = User.objects.get(pk=1)
@@ -273,7 +273,7 @@ class SingleOwnerTestCase(test.TransactionTestCase):
 
 
 class MultiOwnerTestTestCase(test.TransactionTestCase):
-    fixtures = ['owners.json']
+    fixtures = ['tests']
 
     def setUp(self):
         self.user1 = User.objects.get(pk=1)

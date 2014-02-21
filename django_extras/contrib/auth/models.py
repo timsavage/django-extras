@@ -128,7 +128,8 @@ class SingleOwnerMixin(OwnerMixinBase):
             content = models.TextField()
 
     """
-    owner = models.ForeignKey(USER_MODEL_NAME, _('owner'), related_name='%(app_label)s_%(class)s_owner')
+    owner = models.ForeignKey(USER_MODEL_NAME, verbose_name=_('owner'),
+                              related_name='%(app_label)s_%(class)s_owner')
 
     objects = SingleOwnerMixinManager()
 
@@ -177,7 +178,8 @@ class MultipleOwnerMixin(OwnerMixinBase):
             can_edit = models.BooleanField()
 
     """
-    owners = models.ManyToManyField(USER_MODEL_NAME, _('owners'), related_name='%(app_label)s_%(class)s_owners')
+    owners = models.ManyToManyField(USER_MODEL_NAME, verbose_name=_('owners'),
+                                    related_name='%(app_label)s_%(class)s_owners')
 
     objects = MultipleOwnerMixinManager()
 
