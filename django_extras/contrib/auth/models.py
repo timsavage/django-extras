@@ -21,12 +21,12 @@ class OwnerMixinManager(models.Manager):
     """
     def __init__(self, owner_filter):
         super(OwnerMixinManager, self).__init__()
-        self.__owner_filter = owner_filter
+        self.owner_filter = owner_filter
 
     def _owned_by_multi(self, users):
         UserModel = get_user_model()
         user_pks = [u.pk if isinstance(u, UserModel) else u for u in users]
-        filter_ = {self.__owner_filter + '__in': user_pks}
+        filter_ = {self.owner_filter + '__in': user_pks}
         return self.filter(**filter_).distinct()
 
     def _owned_by_single(self, user, include_staff, include_superuser):
@@ -37,7 +37,7 @@ class OwnerMixinManager(models.Manager):
                 user = UserModel.objects.only('is_staff', 'is_superuser').get(pk=user_pk)
             if (include_staff and user.is_staff) or (include_superuser and user.is_superuser):
                 return self.all()
-        filter_ = {self.__owner_filter: user_pk}
+        filter_ = {self.owner_filter: user_pk}
         return self.filter(**filter_)
 
     def owned_by(self, user, include_staff=False, include_superuser=False):
@@ -194,3 +194,26 @@ class MultipleOwnerMixin(OwnerMixinBase):
 
     def get_owner_pks(self):
         return self.owners.values_list('id', flat=True)
+
+
+class ParentOwnerMixin(OwnerMixinBase):
+    """
+    Model mixin that provides ownership of this model that is inherited from a parent model.
+
+    *Usage*
+    ::
+
+        class Document(ParentOwnerMixin, models.Model):
+            name = models.CharField(max_length=200)
+            content = models.TextField()
+            folder = models.ForeignKey(Document)
+
+            objects = OwnerMixinManager('folder')
+
+    """
+    class Meta:
+        abstract = True
+
+    def get_owner_pks(self):
+        assert isinstance(self.objects, OwnerMixinManager)
+        return getattr(self, self.objects.owner_filter).get_owner_pks()
