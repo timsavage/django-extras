@@ -10,12 +10,27 @@ covered by the core Django framework.
     support), the `BitBucket <https://bitbucket.org/timsavage/django-extras>`_ repository may not contain the latest
     code.
 
+.. image:: https://pypip.in/license/django-extras/badge.png
+    :target: https://pypi.python.org/pypi/django-extras/
+    :alt: License
+
+.. image:: https://pypip.in/v/django-extras/badge.png
+    :target: https://pypi.python.org/pypi/django-extras/
+
 .. image:: https://travis-ci.org/timsavage/django-extras.png?branch=master
     :target: https://travis-ci.org/timsavage/django-extras
     :alt: Travis CI Status
 
-.. image:: https://pypip.in/v/django-extras/badge.png
-    :target: https://crate.io/packages/django-extras/
+.. image:: https://coveralls.io/repos/timsavage/django-extras/badge.png?branch=master
+    :target: https://coveralls.io/r/timsavage/django-extras?branch=master
+    :alt: Coveralls
+
+.. image:: https://requires.io/github/timsavage/django-extras/requirements.png?branch=master
+    :target: https://requires.io/github/timsavage/django-extras/requirements/?branch=master
+    :alt: Requirements Status
+
+(requirements is a possible false positive as requires.io detects the multiple version of Django I test against in my
+*tox.ini*!)
 
 * `Documentation`_
 * `Issue tracker`_
