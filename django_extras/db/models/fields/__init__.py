@@ -7,7 +7,7 @@ from django_extras import forms
 from django_extras.core import validators
 from django_extras.core.types import Money
 # Convenience Imports
-from django_extras.db.models.fields.jsonfield import JsonField
+from django_extras.db.models.fields.jsonfield import JsonField  # noqa
 
 
 class ColorField(models.CharField):

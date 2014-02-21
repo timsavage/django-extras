@@ -111,7 +111,6 @@ class OwnerMixinBase(models.Model):
         return not self.is_owned_by(user, include_staff, include_superuser)
 
 
-
 class SingleOwnerMixinManager(OwnerMixinManager):
     def __init__(self, owner_filter='owner'):
         super(SingleOwnerMixinManager, self).__init__(owner_filter)

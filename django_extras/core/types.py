@@ -6,6 +6,7 @@ import math
 NO_CURRENCY_CODE = 'XXX'
 NO_CURRENCY_NUMBER = 999
 
+
 class Currency(object):
     """
     Definition of a currency.
@@ -43,7 +44,7 @@ NoCurrency = Currency(NO_CURRENCY_CODE, NO_CURRENCY_NUMBER, 'No Currency')
 def decimal_value(value):
     """
     Convert a value into a decimal and handle any conversion required.
-    
+
     @raises ValueError if trying to convert a value that does not translate to decimal.
     """
     if value is None:
@@ -53,7 +54,7 @@ def decimal_value(value):
             return decimal.Decimal(str(value))
         except decimal.InvalidOperation:
             raise ValueError('Value could not be converted into a decimal.')
-    return value   
+    return value
 
 
 class Money(object):
@@ -98,19 +99,19 @@ class Money(object):
         if self._can_compare(other):
             raise TypeError('Can not multiply by a monetary quantity.')
         else:
-            return Money(amount = self._amount * decimal_value(other))
+            return Money(amount=self._amount * decimal_value(other))
 
     def __div__(self, other):
         if self._can_compare(other):
             raise TypeError('Can not divide by a monetary quantity.')
         else:
-            return Money(amount = self._amount * decimal_value(other))
+            return Money(amount=self._amount * decimal_value(other))
 
     def __rmod__(self, other):
         """
         Re-purposed to calculate a percentage of a monetary quantity.
 
-        >>> 10 % money.Money(500)
+        >>> 10 % Money(500)
         50.0000
         """
         if isinstance(other, Money):
@@ -181,7 +182,7 @@ class Money(object):
     def _can_compare(self, right):
         """
         Check if we are able to compare right value.
-        
+
         @raises Value Error if currencies do not match.
         """
         if isinstance(right, Money):
@@ -203,8 +204,8 @@ class Money(object):
 
         # Convert digits to string
         results = []
-        digits = map(str, digits)
-        build, next = results.append, digits.pop
+        digits = [str(d) for d in digits]
+        build, next_ = results.append, digits.pop
 
         # Append trailing negative sign
         if sign:
@@ -213,7 +214,7 @@ class Money(object):
         # Cut off decimal digits
         if places:
             for i in range(places):
-                build(next())
+                build(next_())
             build(decimal_place)
 
         # Append digits
@@ -222,7 +223,7 @@ class Money(object):
         else:
             idx = 0
             while digits:
-                build(next())
+                build(next_())
                 idx += 1
                 if not idx % 3 and digits:
                     build(str(separator))
@@ -288,12 +289,14 @@ class latitude(float):
 
     def __str__(self):
         result = "%02i°%02i'%02f\"" % to_dms(self, True)
-        if self < 0: return result + 'S'
-        else: return result + 'N'
+        if self < 0:
+            return result + 'S'
+        else:
+            return result + 'N'
 
 
 class longitude(float):
-    """ Longitude value """
+    """Longitude value"""
     def __new__(cls, value=None):
         if value is None:
             return float.__new__(cls, 0.0)
@@ -308,14 +311,16 @@ class longitude(float):
 
     def __str__(self):
         result = "%03i°%02i\'%02f\"" % to_dms(self, True)
-        if self < 0: return result + 'W'
-        else: return result + 'E'
+        if self < 0:
+            return result + 'W'
+        else:
+            return result + 'E'
 
 
 class latlng(object):
-    """ Latitude/Longitude pair """
+    """Latitude/Longitude pair"""
 
-    __slots__ = ['lat', 'lng'] # Define available parameters
+    __slots__ = ['lat', 'lng']  # Define available parameters
 
     def __init__(self, value):
         if isinstance(value, tuple) and len(value) == 2:
@@ -329,7 +334,8 @@ class latlng(object):
             raise ValueError
 
     def __eq__(self, other):
-        if not isinstance(other, self.__class__): raise TypeError
+        if not isinstance(other, self.__class__):
+            raise TypeError
         return self.lat == other.lat and self.lng == other.lng
 
     def __ne__(self, other):
@@ -340,4 +346,4 @@ class latlng(object):
 
     def get_value(self):
         """ Returns tuple lat/lng pair """
-        return (self.lat, self.lng)
+        return self.lat, self.lng

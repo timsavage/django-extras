@@ -20,4 +20,3 @@ class TimingMiddleware(object):
             length = end - start
             response[self.RESPONSE_HEADER] = str(length.microseconds)
         return response
-    

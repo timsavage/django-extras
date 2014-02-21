@@ -1,26 +1,29 @@
-import re
-import six
-from django.core.validators import *
-from django.utils.translation import ugettext_lazy as _
 try:
     from django.utils import simplejson as json
 except ImportError:
     import json
+# Convenience imports
+from django.core.validators import *  # noqa
+from django.utils.translation import ugettext_lazy as _
 
 
 color_re = re.compile(
-    r'(^#[a-f0-9]{3,6}$)' # Hash style
-    r'|(^rgb\s*\(\s*((2[0-4][0-9]|25[0-5]|1?[0-9]{1,2}|100%|[0-9]{1,2}%)\s*,\s*){2}((2[0-4][0-9]|25[0-5]|1?[0-9]{1,2}|100%|[0-9]{1,2}%)\s*)\))' # rgb style
-    r'|(^hsl\s*\(\s*(360|3[0-5][0-9]|[0-2]?[0-9]{1,2})\s*,\s*(100%|[0-9]{1,2}%)\s*,\s*(100%|[0-9]{1,2}%)\s*\)$)', re.IGNORECASE) # hsl style
+    r'(^#[a-f0-9]{3,6}$)'  # Hash style
+    r'|(^rgb\s*\(\s*((2[0-4][0-9]|25[0-5]|1?[0-9]{1,2}|100%|[0-9]{1,2}%)\s*,\s*){2}((2[0-4][0-9]|25[0-5]|1?[0-9]{1,2}|100%|[0-9]{1,2}%)\s*)\))'  # rgb style  # noqa
+    r'|(^hsl\s*\(\s*(360|3[0-5][0-9]|[0-2]?[0-9]{1,2})\s*,\s*(100%|[0-9]{1,2}%)\s*,\s*(100%|[0-9]{1,2}%)\s*\)$)',  # hsl style  # noqa
+    re.IGNORECASE
+)
 validate_color = RegexValidator(color_re, _(six.u('Enter a valid color in CSS format.')), 'invalid')
 
 
 alpha_color_re = re.compile(
-    r'(^#[a-f0-9]{3,6}$)' # Hash style
-    r'|(^rgb\s*\(\s*((2[0-4][0-9]|25[0-5]|1?[0-9]{1,2}|100%|[0-9]{1,2}%)\s*,\s*){2}((2[0-4][0-9]|25[0-5]|1?[0-9]{1,2}|100%|[0-9]{1,2}%)\s*)\))' # rgb style
-    r'|(^rgba\s*\(\s*((2[0-4][0-9]|25[0-5]|1?[0-9]{1,2}|100%|[0-9]{1,2}%)\s*,\s*){3}(((0?(\.[0-9]+)?)|1)\s*)\)$)' # rgba style
-    r'|(^hsl\s*\(\s*(360|3[0-5][0-9]|[0-2]?[0-9]{1,2})\s*,\s*(100%|[0-9]{1,2}%)\s*,\s*(100%|[0-9]{1,2}%)\s*\)$)' # hsl style
-    r'|(^hsla\s*\(\s*(360|3[0-5][0-9]|[0-2]?[0-9]{1,2})\s*,\s*((100%|[0-9]{1,2}%)\s*,\s*){2}(((0?(\.[0-9]+)?)|1)\s*)\)$)', re.IGNORECASE) # hsla style
+    r'(^#[a-f0-9]{3,6}$)'  # Hash style
+    r'|(^rgb\s*\(\s*((2[0-4][0-9]|25[0-5]|1?[0-9]{1,2}|100%|[0-9]{1,2}%)\s*,\s*){2}((2[0-4][0-9]|25[0-5]|1?[0-9]{1,2}|100%|[0-9]{1,2}%)\s*)\))'  # rgb style  # noqa
+    r'|(^rgba\s*\(\s*((2[0-4][0-9]|25[0-5]|1?[0-9]{1,2}|100%|[0-9]{1,2}%)\s*,\s*){3}(((0?(\.[0-9]+)?)|1)\s*)\)$)'  # rgba style  # noqa
+    r'|(^hsl\s*\(\s*(360|3[0-5][0-9]|[0-2]?[0-9]{1,2})\s*,\s*(100%|[0-9]{1,2}%)\s*,\s*(100%|[0-9]{1,2}%)\s*\)$)'  # hsl style  # noqa
+    r'|(^hsla\s*\(\s*(360|3[0-5][0-9]|[0-2]?[0-9]{1,2})\s*,\s*((100%|[0-9]{1,2}%)\s*,\s*){2}(((0?(\.[0-9]+)?)|1)\s*)\)$)',  # hsla style  # noqa
+    re.IGNORECASE
+)
 validate_alpha_color = RegexValidator(alpha_color_re, _(six.u('Enter a valid color in CSS format.')), 'invalid')
 
 

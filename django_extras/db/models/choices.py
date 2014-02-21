@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from django.db.models.fields import NOT_PROVIDED
+import six
 
 
 class ChoiceEnum(object):
@@ -13,14 +14,14 @@ class ChoiceEnum(object):
 
         MY_CHOICES = ChoiceEnum(
             OPTION_ONE = ('value', 'Verbose value'),
-            OPTION_TWO = ('value2', 'Verbose value 2', True), # Default, the value can be anything ;)
+            OPTION_TWO = ('value2', 'Verbose value 2', True),  # Default, the value can be anything ;)
         )
 
     The less nice way to use ChoiceEnum (with guaranteed ordering):
 
         MY_CHOICES = ChoiceEnum(
             ('OPTION_ONE', ('value', 'Verbose value')),
-            ('OPTION_TWO', ('value2', 'Verbose value 2', True)), # Default, the value can be anything ;)
+            ('OPTION_TWO', ('value2', 'Verbose value 2', True)),  # Default, the value can be anything ;)
         )
 
     They can then be used for field choices:
@@ -70,7 +71,7 @@ class ChoiceEnum(object):
 
         if value_len == 3:
             self.__default = value[0]
-        if isinstance(value[0], basestring):
+        if isinstance(value[0], six.string_types):
             self.__max_length = max(self.__max_length, len(value[0]))
 
         self.__value_map[value[0]] = value[1]

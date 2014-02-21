@@ -1,4 +1,4 @@
-from django.forms.fields import *
+from django.forms.fields import *  # noqa
 from django_extras.forms import widgets
 from django_extras.core import validators
 
@@ -23,4 +23,4 @@ class JsonField(Field):
     Form field that validates that valid JSON is supplied.
     """
     widget = widgets.Textarea
-    default_validators = [ validators.validate_json ]
+    default_validators = [validators.validate_json]

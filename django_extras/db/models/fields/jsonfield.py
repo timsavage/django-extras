@@ -1,3 +1,4 @@
+import six
 try:
     from django.utils import simplejson as json
 except ImportError:
@@ -34,12 +35,9 @@ class JsonList(list):
         return dumps(self)
 
 
-class JsonField(models.TextField):
+class JsonField(six.with_metaclass(models.SubfieldBase, models.TextField)):
     """Field that serializes/de-serializes a python list/dictionary to the
     database seamlessly."""
-
-    # Used so to_python() is called
-    __metaclass__ = models.SubfieldBase
 
     def __init__(self, *args, **kwargs):
         if 'default' not in kwargs:
@@ -50,7 +48,7 @@ class JsonField(models.TextField):
         """Convert our string value to JSON after we load it from the DB"""
         if value is None or value == '':
             return {}
-        elif isinstance(value, basestring):
+        elif isinstance(value, six.string_types):
             res = loads(value)
             if isinstance(res, dict):
                 return JsonDict(**res)

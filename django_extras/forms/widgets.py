@@ -1,5 +1,4 @@
-# Convenience import
-from django.forms.widgets import *
+from django.forms.widgets import *  # noqa
 
 
 class Html5EmailInput(TextInput):

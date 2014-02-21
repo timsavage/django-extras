@@ -37,5 +37,5 @@ def instance_key(instance, fields=None, postfix=None):
     if fields:
         values = [(f, getattr(instance, f)) for f in fields]
     else:
-        values = [('pk', instance.pk),]
+        values = [('pk', instance.pk), ]
     return _generate_key(instance, values, postfix)
