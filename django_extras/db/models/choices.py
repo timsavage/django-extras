@@ -58,11 +58,10 @@ class ChoiceEnum(object):
         self.__value_map = {}
         self.__choices = OrderedDict()
 
-        map(self.__parse_entry, iter(entries.items()))
+        for entry in entries.items():
+            self.__parse_entry(*entry)
 
-    def __parse_entry(self, entry):
-        key, value = entry
-
+    def __parse_entry(self, key, value):
         if not isinstance(value, (tuple, list)):
             raise TypeError('Choice options should be a tuple or list.')
         value_len = len(value)
