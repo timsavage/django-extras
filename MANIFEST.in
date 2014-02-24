@@ -1,5 +1,5 @@
-include README
-include LICENSE
-include MANIFEST.in
+include runner README.rst
+include runner LICENSE
+include runner MANIFEST.in
 recursive-include django_extras/fixtures *
 recursive-include django_extras/static *
