@@ -1,3 +1,8 @@
+# -*- coding: UTF-8 -*-
+"""
+Django Extras: db.models.fields
+"""
+
 #from django.conf import settings
 from django.core import exceptions
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -43,7 +48,7 @@ class MoneyField(models.DecimalField):
     """
     default_error_messages = {
         'invalid': _(u'This value must be a monetary amount.'),
-        }
+    }
     description = _("Monetary amount")
 
     def __init__(self, *args, **kwargs):
@@ -54,6 +59,8 @@ class MoneyField(models.DecimalField):
     def to_python(self, value):
         if value is None:
             return value
+        if isinstance(value, Money):
+            return value
         try:
             return Money(value)
         except ValueError:
@@ -63,7 +70,7 @@ class MoneyField(models.DecimalField):
         value = self.to_python(value)
         if value is not None:
             value = value._amount
-        super(MoneyField, self).get_db_prep_save(value, connection)
+        return connection.ops.value_to_db_decimal(value, self.max_digits, self.decimal_places)
 
 
 class PercentField(models.FloatField):

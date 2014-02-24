@@ -14,6 +14,12 @@ covered by the core Django framework.
     :target: https://travis-ci.org/timsavage/django-extras
     :alt: Travis CI Status
 
+.. image:: https://pypip.in/v/django-extras/badge.png
+        :target: https://crate.io/packages/django-extras
+
+.. image:: https://pypip.in/d/django-extras/badge.png
+        :target: https://crate.io/packages/django-extras
+
 * `Documentation`_
 * `Issue tracker`_
 * `Source code`_
