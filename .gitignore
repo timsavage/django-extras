@@ -17,3 +17,6 @@ build*
 dist*
 docs/*.html
 MANIFEST
+.coverage
+.tox
+docs/_build

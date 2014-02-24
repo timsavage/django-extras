@@ -51,7 +51,7 @@ setup(
     description = "A selection of extras for the Django Web framework.",
     packages = packages,
     data_files = data_files,
-    install_requires = ['django'],
+    install_requires = ['django', 'six'],
     classifiers = [
         'Environment :: Web Environment',
         'Framework :: Django',

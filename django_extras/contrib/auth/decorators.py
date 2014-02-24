@@ -1,6 +1,6 @@
 # -*- encoding:utf8 -*-
-from django.contrib.auth.decorators import *
-from django.core.exceptions import PermissionDenied
+# Convenience imports
+from django.contrib.auth.decorators import *  # noqa
 
 
 def superuser_required(function=None, login_url=None, raise_exception=False):

@@ -4,7 +4,8 @@ TIME_MAP = (
     ('h', 3600),
     ('m', 60),
     ('s', 1)
-    )
+)
+
 
 def describe_seconds(value):
     """
@@ -14,7 +15,7 @@ def describe_seconds(value):
     """
     value_vector = []
     for unit, factor in iter(TIME_MAP):
-        component, value = value / factor, value % factor
+        component, value = int(value / factor), value % factor
         if component:
             value_vector.append('%s%s' % (component, unit))
     return ' '.join(value_vector)

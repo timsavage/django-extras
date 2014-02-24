@@ -3,7 +3,7 @@
 Django Extras: db.models.fields
 """
 
-#from django.conf import settings
+import six
 from django.core import exceptions
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
@@ -12,7 +12,7 @@ from django_extras import forms
 from django_extras.core import validators
 from django_extras.core.types import Money
 # Convenience Imports
-from django_extras.db.models.fields.jsonfield import JsonField
+from django_extras.db.models.fields.jsonfield import JsonField  # noqa
 
 
 class ColorField(models.CharField):
@@ -20,7 +20,7 @@ class ColorField(models.CharField):
     Database field that represents a color value.
     """
     default_error_messages = {
-        'invalid': _(u'This value must be a CSS colour value.'),
+        'invalid': _(six.u('This value must be a CSS colour value.')),
     }
     description = _("Color value")
 
@@ -42,12 +42,13 @@ class ColorField(models.CharField):
         return super(ColorField, self).formfield(**defaults)
 
 
+# TODO: This field should really also store the currency.
 class MoneyField(models.DecimalField):
     """
     Database field that represents a Money amount.
     """
     default_error_messages = {
-        'invalid': _(u'This value must be a monetary amount.'),
+        'invalid': _(six.u('This value must be a monetary amount.')),
     }
     description = _("Monetary amount")
 

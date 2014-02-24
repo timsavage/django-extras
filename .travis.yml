@@ -1,9 +1,31 @@
 language: python
-env:
-  - DJANGO_PACKAGE="django>=1.5,<1.6"
-  - DJANGO_PACKAGE="django>=1.4,<1.5"
+
 python:
   - "2.7"
+
+env:
+  - DJANGO_PACKAGE="django>=1.6,<1.7"
+  - DJANGO_PACKAGE="django>=1.5,<1.6"
+  - DJANGO_PACKAGE="django>=1.4,<1.5"
+  - DJANGO_PACKAGE="https://www.djangoproject.com/download/1.7a2/tarball/"
+
+matrix:
+  # Still in alpha.
+  allow_failures:
+  - env: DJANGO_PACKAGE="https://www.djangoproject.com/download/1.7a2/tarball/"
+
+  # Include specific versions Django for Python 3
+  include:
+  - python: "3.3"
+    env: DJANGO_PACKAGE="django>=1.6,<1.7"
+  - python: "3.3"
+    env: DJANGO_PACKAGE="https://www.djangoproject.com/download/1.7a2/tarball/"
+
 install:
-  - pip install -q $DJANGO_PACKAGE
-script: python -mtest_harness.runner
+  - pip install -q $DJANGO_PACKAGE six
+  - pip install coveralls
+
+script: coverage run django_app_test/runner.py django_extras
+
+after_success:
+  - coveralls

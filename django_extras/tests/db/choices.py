@@ -6,8 +6,8 @@ from django_extras.db.models.choices import ChoiceEnum
 class ChoicesTestCase(test.TestCase):
     def test_kwargs(self):
         target = ChoiceEnum(
-            OPTION_ONE = ('value', 'Verbose value'),
-            OPTION_TWO = ('value2', 'Verbose value 2', True), # Default, the value can be anything ;)
+            OPTION_ONE=('value', 'Verbose value'),
+            OPTION_TWO=('value2', 'Verbose value 2', True),  # Default, the value can be anything ;)
         )
 
         self.assertEqual('value', target.OPTION_ONE)
@@ -16,7 +16,7 @@ class ChoicesTestCase(test.TestCase):
     def test_args(self):
         target = ChoiceEnum(
             ('OPTION_ONE', ('value', 'Verbose value')),
-            ('OPTION_TWO', ('value2', 'Verbose value 2', True)), # Default, the value can be anything ;)
+            ('OPTION_TWO', ('value2', 'Verbose value 2', True)),  # Default, the value can be anything ;)
         )
 
         self.assertEqual('value', target.OPTION_ONE)
@@ -24,24 +24,24 @@ class ChoicesTestCase(test.TestCase):
 
     def test_max_length(self):
         target = ChoiceEnum(
-            OPTION_ONE = ('value', 'Verbose value'),
-            OPTION_TWO = ('value2', 'Verbose value 2', True), # Default, the value can be anything ;)
+            OPTION_ONE=('value', 'Verbose value'),
+            OPTION_TWO=('value2', 'Verbose value 2', True),  # Default, the value can be anything ;)
         )
 
         self.assertEqual(6, target.max_length)
 
     def test_default_set(self):
         target = ChoiceEnum(
-            OPTION_ONE = ('value', 'Verbose value'),
-            OPTION_TWO = ('value2', 'Verbose value 2', True), # Default, the value can be anything ;)
+            OPTION_ONE=('value', 'Verbose value'),
+            OPTION_TWO=('value2', 'Verbose value 2', True),  # Default, the value can be anything ;)
         )
 
         self.assertEqual('value2', target.default)
 
     def test_default_not_set(self):
         target = ChoiceEnum(
-            OPTION_ONE = ('value', 'Verbose value'),
-            OPTION_TWO = ('value2', 'Verbose value 2'),
+            OPTION_ONE=('value', 'Verbose value'),
+            OPTION_TWO=('value2', 'Verbose value 2'),
         )
 
         self.assertEqual(NOT_PROVIDED, target.default)
@@ -49,7 +49,7 @@ class ChoicesTestCase(test.TestCase):
     def test_kwargs_string_value(self):
         target = ChoiceEnum(
             ('OPTION_ONE', ('value', 'Verbose value')),
-            ('OPTION_TWO', ('value2', 'Verbose value 2', True)), # Default, the value can be anything ;)
+            ('OPTION_TWO', ('value2', 'Verbose value 2', True)),  # Default, the value can be anything ;)
         )
 
         self.assertEqual({
@@ -61,7 +61,7 @@ class ChoicesTestCase(test.TestCase):
     def test_kwargs_int_value(self):
         target = ChoiceEnum(
             ('OPTION_ONE', (1, 'Verbose value')),
-            ('OPTION_TWO', (2, 'Verbose value 2', True)), # Default, the value can be anything ;)
+            ('OPTION_TWO', (2, 'Verbose value 2', True)),  # Default, the value can be anything ;)
         )
 
         self.assertEqual({
@@ -72,7 +72,7 @@ class ChoicesTestCase(test.TestCase):
     def test_resolve_value(self):
         target = ChoiceEnum(
             ('OPTION_ONE', (1, 'Verbose value')),
-            ('OPTION_TWO', (2, 'Verbose value 2', True)), # Default, the value can be anything ;)
+            ('OPTION_TWO', (2, 'Verbose value 2', True)),  # Default, the value can be anything ;)
         )
 
         self.assertEqual('Verbose value', target.resolve_value(1))
@@ -80,7 +80,7 @@ class ChoicesTestCase(test.TestCase):
     def test_mod(self):
         target = ChoiceEnum(
             ('OPTION_ONE', (1, 'Verbose value')),
-            ('OPTION_TWO', (2, 'Verbose value 2', True)), # Default, the value can be anything ;)
+            ('OPTION_TWO', (2, 'Verbose value 2', True)),  # Default, the value can be anything ;)
         )
 
         self.assertEqual('Verbose value 2', target % 2)
@@ -88,15 +88,15 @@ class ChoicesTestCase(test.TestCase):
     def test_iterator(self):
         target = ChoiceEnum(
             ('OPTION_ONE', (1, 'Verbose value')),
-            ('OPTION_TWO', (2, 'Verbose value 2', True)), # Default, the value can be anything ;)
+            ('OPTION_TWO', (2, 'Verbose value 2', True)),  # Default, the value can be anything ;)
         )
 
-        self.assertEqual([(1, 'Verbose value'), (2, 'Verbose value 2'),], list(target))
+        self.assertEqual([(1, 'Verbose value'), (2, 'Verbose value 2'), ], list(target))
 
     def test_getattr(self):
         target = ChoiceEnum(
             ('OPTION_ONE', (1, 'Verbose value')),
-            ('OPTION_TWO', (2, 'Verbose value 2', True)), # Default, the value can be anything ;)
+            ('OPTION_TWO', (2, 'Verbose value 2', True)),  # Default, the value can be anything ;)
         )
 
         self.assertEqual(1, target.OPTION_ONE)
@@ -104,7 +104,7 @@ class ChoicesTestCase(test.TestCase):
     def test_getattr_display(self):
         target = ChoiceEnum(
             ('OPTION_ONE', (1, 'Verbose value')),
-            ('OPTION_TWO', (2, 'Verbose value 2', True)), # Default, the value can be anything ;)
+            ('OPTION_TWO', (2, 'Verbose value 2', True)),  # Default, the value can be anything ;)
         )
 
         self.assertEqual('Verbose value 2', target.OPTION_TWO__display)
@@ -112,7 +112,7 @@ class ChoicesTestCase(test.TestCase):
     def test_contains(self):
         target = ChoiceEnum(
             ('OPTION_ONE', (1, 'Verbose value')),
-            ('OPTION_TWO', (2, 'Verbose value 2', True)), # Default, the value can be anything ;)
+            ('OPTION_TWO', (2, 'Verbose value 2', True)),  # Default, the value can be anything ;)
         )
 
         self.assertTrue(1 in target)
@@ -123,11 +123,11 @@ class ChoicesTestCase(test.TestCase):
 
     def test_init_invalid_entry(self):
         self.assertRaises(TypeError, lambda: ChoiceEnum(
-            OPTION_ONE = ('value', 'Verbose value'),
-            OPTION_TWO = 'value2'
+            OPTION_ONE=('value', 'Verbose value'),
+            OPTION_TWO='value2'
         ))
 
         self.assertRaises(ValueError, lambda: ChoiceEnum(
-            OPTION_ONE = ('value', 'Verbose value'),
-            OPTION_TWO = ('value2', 'Verbose value 2', True, 1)
+            OPTION_ONE=('value', 'Verbose value'),
+            OPTION_TWO=('value2', 'Verbose value 2', True, 1)
         ))
