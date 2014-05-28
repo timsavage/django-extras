@@ -5,6 +5,7 @@ import sys
 
 from optparse import OptionParser
 
+import django
 from django.conf import settings
 from django.core.management import call_command
 
@@ -24,7 +25,7 @@ def main():
     """
     parser = OptionParser()
     parser.add_option("--DATABASE_ENGINE", dest="DATABASE_ENGINE", default="django.db.backends.sqlite3")
-    parser.add_option("--DATABASE_NAME", dest="DATABASE_NAME", default="")
+    parser.add_option("--DATABASE_NAME", dest="DATABASE_NAME", default=":memory:")
     parser.add_option("--DATABASE_USER", dest="DATABASE_USER", default="")
     parser.add_option("--DATABASE_PASSWORD", dest="DATABASE_PASSWORD", default="")
     parser.add_option("--SITE_ID", dest="SITE_ID", type="int", default=1)
@@ -54,7 +55,7 @@ def main():
                 'PORT': '',
             }
         },
-        "SITE_ID": options.SITE_ID,
+        # "SITE_ID": options.SITE_ID,
         "SECRET_KEY": "Test Key",
         "ROOT_URLCONF": "django_app_test.urls",
         "TEMPLATE_LOADERS": (
@@ -65,13 +66,18 @@ def main():
             "django.contrib.auth",
             "django.contrib.contenttypes",
             "django.contrib.sessions",
-            "django.contrib.sites",
+            # "django.contrib.sites",
             app_name,
         ),
 
         # Force test runner to be the pre django 1.6 test runner. This tool does not work with then new default in 1.6.
         "TEST_RUNNER": "django.test.simple.DjangoTestSuiteRunner"
     })
+
+    # This is to ensure that Django 1.7's app registry is populated prior to calling a command.
+    if hasattr(django, 'setup'):
+        django.setup()
+
     call_command("test", app_name)
 
 if __name__ == "__main__":
