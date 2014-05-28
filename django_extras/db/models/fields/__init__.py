@@ -111,7 +111,7 @@ class LongitudeField(models.FloatField):
 
 
 # Register special admin widgets if admin is in use.
-#if 'django.contrib.admin' in settings.INSTALLED_APPS:
+# if 'django.contrib.admin' in settings.INSTALLED_APPS:
 #    from django.contrib.admin import options
 #    from django_extras.forms.widgets import JQueryColorPicker
 #    options.FORMFIELD_FOR_DBFIELD_DEFAULTS[ColorField] = { 'widget': JQueryColorPicker }

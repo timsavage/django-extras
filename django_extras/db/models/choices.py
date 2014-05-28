@@ -65,7 +65,7 @@ class ChoiceEnum(object):
         if not isinstance(value, (tuple, list)):
             raise TypeError('Choice options should be a tuple or list.')
         value_len = len(value)
-        if not value_len in (2, 3):
+        if value_len not in (2, 3):
             raise ValueError('Expected choice entry in the form (Value, Verbose Value, [default]).')
 
         if value_len == 3:

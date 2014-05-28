@@ -117,7 +117,7 @@ class Money(object):
         if isinstance(other, Money):
             raise TypeError('Can not use a monetary quantity as a percentage.')
         else:
-            #noinspection PyTypeChecker
+            # noinspection PyTypeChecker
             percentage = decimal_value(other) * self._amount / 100
             return Money(amount=percentage)
 
