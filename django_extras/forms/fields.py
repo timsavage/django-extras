@@ -18,7 +18,7 @@ class ColorField(CharField):
             self.validators.append(validators.validate_color)
 
 
-class JsonField(Field):
+class JsonField(CharField):
     """
     Form field that validates that valid JSON is supplied.
     """
