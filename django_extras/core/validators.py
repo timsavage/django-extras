@@ -1,9 +1,9 @@
 # Convenience imports
 from django.core.validators import *  # noqa
 try:
-    from django.utils import simplejson as json
-except ImportError:
     import json
+except ImportError:
+    from django.utils import simplejson as json
 import six
 from django.utils.translation import ugettext_lazy as _
 
