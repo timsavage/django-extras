@@ -29,9 +29,6 @@ covered by the core Django framework.
     :target: https://requires.io/github/timsavage/django-extras/requirements/?branch=master
     :alt: Requirements Status
 
-(requirements is a possible false positive as requires.io detects the multiple version of Django I test against in my
-*tox.ini*!)
-
 * `Documentation`_
 * `Issue tracker`_
 * `Source code`_
