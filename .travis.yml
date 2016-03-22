@@ -31,7 +31,7 @@ matrix:
       env: DJANGO=django>=1.4,<1.5
       
 install:
-  - pip install -q $DJANGO_PACKAGE six
+  - pip install -q $DJANGO six
   - pip install coveralls
 
 script: coverage run django_app_test/runner.py django_extras
