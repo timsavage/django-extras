@@ -10,11 +10,11 @@ covered by the core Django framework.
     support), the `BitBucket <https://bitbucket.org/timsavage/django-extras>`_ repository may not contain the latest
     code.
 
-.. image:: https://pypip.in/license/django-extras/badge.png
+.. image:: https://img.shields.io/pypi/l/django-extras.svg
     :target: https://pypi.python.org/pypi/django-extras/
     :alt: License
 
-.. image:: https://pypip.in/v/django-extras/badge.png
+.. image:: https://img.shields.io/pypi/v/django-extras.svg
     :target: https://pypi.python.org/pypi/django-extras/
 
 .. image:: https://travis-ci.org/timsavage/django-extras.png?branch=master
