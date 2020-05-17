@@ -2,6 +2,8 @@
 Django Extras
 =============
 
+This project is no longer maintained. If you would like to take it over please contact me.
+
 Extensions for Django to solve common development situations not (or not yet)
 covered by the core Django framework.
 
